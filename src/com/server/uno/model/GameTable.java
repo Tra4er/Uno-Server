@@ -2,18 +2,18 @@ package com.server.uno.model;
 
 public class GameTable {
 	
-	public static final int FULL_DESK = 108;
+	public static final int FULL_DECK = 108;
 	
-	private volatile int cardsInDesk = FULL_DESK;
+	private volatile int cardsInDeck = FULL_DECK;
 	private volatile int cardsOnTable;
-	private volatile int lastCartOnTable;
+	private volatile int lastCardOnTable;
 	
 
-	public int getCardsInDesk() {
-		return cardsInDesk;
+	public int getCardsInDeck() {
+		return cardsInDeck;
 	}
-	public void setCardsInDesk(int cardsInDesk) {
-		this.cardsInDesk = cardsInDesk;
+	public void setCardsInDeck(int cardsInDesk) {
+		this.cardsInDeck = cardsInDesk;
 	}
 	public int getCardsOnTable() {
 		return cardsOnTable;
@@ -21,10 +21,10 @@ public class GameTable {
 	public void setCardsOnTable(int cardsOnTable) {
 		this.cardsOnTable = cardsOnTable;
 	}
-	public int getLastCartOnTable() {
-		return lastCartOnTable;
+	public int getLastCardOnTable() {
+		return lastCardOnTable;
 	}
-	public void setLastCartOnTable(int lastCartOnTable) {
-		this.lastCartOnTable = lastCartOnTable;
+	public void setLastCardOnTable(int lastCartOnTable) {
+		this.lastCardOnTable = lastCartOnTable;
 	}
 }

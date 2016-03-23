@@ -1,11 +1,15 @@
 package com.server.uno.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Player implements Comparable<Player> {
 
 	private final static String STANDART_NAME = "Player";
 
 	public final String id;
 	private volatile String name;
+	private volatile LinkedList<String> cards;
 	private volatile int timeToMove;
 
 	public Player(String id) {
@@ -29,6 +33,21 @@ public class Player implements Comparable<Player> {
 		}
 	}
 
+	public LinkedList<String> getCards() {
+		return cards;
+	}
+
+	public void setCards(List<String> cards) {
+		this.cards = (LinkedList<String>) cards;
+	}
+	
+	public void giveCard(String card) {
+		if(cards == null) {
+			cards = new LinkedList<>();
+		}
+		cards.add(card); // Valid? 
+	}
+
 	public int getTimeToMove() {
 		return timeToMove;
 	}
@@ -46,6 +65,8 @@ public class Player implements Comparable<Player> {
 	public int compareTo(Player p2) {
 		if (id.equals(p2.id))
 			return 0;
-		else return 1;
+		else
+			return 1;
 	}
+
 }

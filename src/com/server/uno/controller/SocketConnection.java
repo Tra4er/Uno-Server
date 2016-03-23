@@ -1,17 +1,18 @@
 package com.server.uno.controller;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.Iterator;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
+import com.server.uno.util.JsonGenerator;
 
 public class SocketConnection extends Thread {
+
+	public static final String STRING_TERMINATOR = "";
 
 	private Socket socket;
 
@@ -29,25 +30,44 @@ public class SocketConnection extends Thread {
 			BufferedReader buffReader = new BufferedReader(inStream);
 			PrintStream printStream = new PrintStream(socket.getOutputStream());
 
-			String status = buffReader.readLine();
-			String playerName = buffReader.readLine();
-			if (status.equals("hello")) {
-				Player player = new Player(createId(), playerName);
+			String message = buffReader.readLine();
+			System.out.println(message);
+
+			if (message.equals("hello")) {
+				message = waitForMessage(buffReader);
+				Player player = new Player(createId(), message);
 				game.players.add(player);
-				printStream.println(player.id + "\0");
+				// printStream.println("hello");
+				printStream.print(player.id + STRING_TERMINATOR);
 				System.out.println(game.players.toString());
-			} else if (status.equals("bye")) {
-				socket.close();
-				interrupt();
-			} else if (Integer.parseInt(status) > 0) {
-				game.players.forEach(p -> {
-					if (p.id.equals(status)) {
-						printStream.println(createJson());
+
+				while (!socket.isClosed()) {
+					message = waitForMessage(buffReader);
+					if (message.equals("id")) {
+						System.out.println("id");
+						message = waitForMessage(buffReader);
+						if (Integer.parseInt(message, 16) > 0) {
+							for (Player player1 : game.players) {
+								if (player1.id.equals(message)) {
+									String jsonAnswer = new JsonGenerator(game, player1).getJsonObjectAsString()
+											+ STRING_TERMINATOR;
+									printStream.print(jsonAnswer);
+									System.out.println(jsonAnswer);
+								}
+							}
+						}
 					}
-				});
+
+					message = waitForMessage(buffReader);
+					if (message.equals("bye")) {
+						System.out.println("Client Bye");
+						printStream.print("bye");
+						socket.close();
+						interrupt();
+					}
+
+				}
 			}
-			System.out.println(status);
-			System.out.println(playerName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,23 +78,13 @@ public class SocketConnection extends Thread {
 		return id;
 	}
 
-	private String createJson() {
-		Iterator<Player> iterator = game.players.iterator();
-		JsonObject json = new JsonObject();
-		JsonArray jarr = new JsonArray();
-		int counter = 0;
-		json.addProperty("status", game.getStatus());
-		if (game.getStatus().equals("inRoom")) {
-			while (iterator.hasNext()) {
-				jarr.add(iterator.next().getName());
-				counter++;
-			}
-			json.add("players", jarr);
-			json.addProperty("needToStart", counter);
-			return json.toString();
-		} else if (game.getStatus().equals("inGame")) {
-			return json.toString();
+	private String waitForMessage(BufferedReader buffReader) throws IOException {
+		try {
+			while(!buffReader.ready()) {}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return "Json Error";
+		return buffReader.readLine();
 	}
+
 }
