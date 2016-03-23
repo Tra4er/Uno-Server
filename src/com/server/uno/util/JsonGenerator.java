@@ -2,6 +2,8 @@ package com.server.uno.util;
 
 import java.util.Iterator;
 
+import org.json.simple.JSONObject;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.server.uno.model.Game;
@@ -21,6 +23,9 @@ public class JsonGenerator {
 		} else if (game.getStatus().equals("inGame")) {
 			this.game = game;
 			createInGameJson();
+		} else if (game.getStatus().equals("move")){
+			this.game = game;
+			createMoveJson();
 		}
 		if (player != null) {
 			this.player = player;
@@ -58,13 +63,16 @@ public class JsonGenerator {
 
 		json.addProperty("status", game.getStatus());
 		for (String cart : player.getCards()) {
-			jsonCards.add(cart);                             // returns Strins and he wanted int
+			jsonCards.add(cart);
 		}
 		json.add("cards", jsonCards);
-		json.addProperty("currentPlayer", player.getName()); // TODO ID is better choice
-		json.addProperty("timeToMove", player.getTimeToMove()); // Changed key
+		json.addProperty("currentPlayer", player.getName()); 
+		json.addProperty("timeToMove", player.getTimeToMove()); 
 		json.addProperty("cardsInDeck", game.desk.getCardsInDeck());
-		json.addProperty("cardsOnTable", game.desk.getCardsOnTable());
 		json.addProperty("lastCardOnTable", game.desk.getLastCardOnTable());
+	}
+	
+	private void createMoveJson() {
+		// TODO Add imlp
 	}
 }

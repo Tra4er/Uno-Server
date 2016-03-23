@@ -6,11 +6,16 @@ import java.net.Socket;
 
 import com.server.uno.model.Game;
 
+import com.server.uno.controller.SocketConnection;
+
 public class Server {
 
 	public final int PORT;
 
+//	private Object lock = new Object();
 	private ServerSocket serverSocket;
+//	private ArrayList<Thread> threadPool = new ArrayList<>();
+//	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
 	private Game game = new Game();
 
@@ -26,8 +31,9 @@ public class Server {
 				socket = serverSocket.accept();
 				SocketConnection newConnection = new SocketConnection(socket, game);
 				newConnection.run(); // TODO notify for all my connections
+//				threadPool.add(newConnection);
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			socket.close();

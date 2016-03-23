@@ -3,6 +3,8 @@ package com.server.uno.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.server.uno.model.Player;
+
 public class Player implements Comparable<Player> {
 
 	private final static String STANDART_NAME = "Player";
@@ -26,11 +28,9 @@ public class Player implements Comparable<Player> {
 	}
 
 	public void setName(String name) {
-		if (name == null) {
-			name = STANDART_NAME;
-		} else {
-			this.name = name;
-		}
+		if (name == null)
+			throw new NullPointerException("Wrong name");
+		this.name = name;
 	}
 
 	public LinkedList<String> getCards() {
@@ -38,6 +38,8 @@ public class Player implements Comparable<Player> {
 	}
 
 	public void setCards(List<String> cards) {
+		if(cards == null) 
+			throw new NullPointerException("Wrong cards list");
 		this.cards = (LinkedList<String>) cards;
 	}
 	
@@ -53,6 +55,8 @@ public class Player implements Comparable<Player> {
 	}
 
 	public void setTimeToMove(int timeToMove) {
+		if(timeToMove < 0 && timeToMove > 45)
+			throw new IllegalArgumentException("Wrong timeToMove");
 		this.timeToMove = timeToMove;
 	}
 
