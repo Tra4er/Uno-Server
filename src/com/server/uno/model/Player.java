@@ -1,5 +1,6 @@
 package com.server.uno.model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,9 +12,8 @@ public class Player implements Comparable<Player> {
 
 	public final String id;
 	private volatile String name;
-	private volatile LinkedList<String> cards;
-	private volatile int timeToMove;
-
+	private volatile List<Card> cards = new LinkedList<>();
+	
 	public Player(String id) {
 		this(id, STANDART_NAME);
 	}
@@ -21,6 +21,20 @@ public class Player implements Comparable<Player> {
 	public Player(String id, String name) {
 		this.id = id;
 		setName(name);
+	}
+	
+	public void takeCard(Card card) {
+		if(card == null) 
+			throw new NullPointerException("Wrong card");
+		cards.add(card);
+	}
+	
+	public Card giveCard() {
+		Card temp = cards.get(1); // !
+//		((LinkedList<Card>) cards).contains(o);
+		((LinkedList<Card>) cards).removeFirstOccurrence(temp);
+		return temp;
+//		TODO Continue impl!!!
 	}
 
 	public String getName() {
@@ -33,36 +47,19 @@ public class Player implements Comparable<Player> {
 		this.name = name;
 	}
 
-	public LinkedList<String> getCards() {
+	public List<Card> getCards() {
 		return cards;
 	}
 
-	public void setCards(List<String> cards) {
+	public void setCards(List<Card> cards) {
 		if(cards == null) 
 			throw new NullPointerException("Wrong cards list");
-		this.cards = (LinkedList<String>) cards;
+		this.cards = cards;
 	}
 	
-	public void giveCard(String card) {
-		if(cards == null) {
-			cards = new LinkedList<>();
-		}
-		cards.add(card); // Valid? 
-	}
-
-	public int getTimeToMove() {
-		return timeToMove;
-	}
-
-	public void setTimeToMove(int timeToMove) {
-		if(timeToMove < 0 && timeToMove > 45)
-			throw new IllegalArgumentException("Wrong timeToMove");
-		this.timeToMove = timeToMove;
-	}
-
 	@Override
 	public String toString() {
-		return "Player [id=" + id + ", name=" + name + ", timeToMove=" + timeToMove + "]";
+		return "Player [id=" + id + ", name=" + name + "]";
 	}
 
 	@Override

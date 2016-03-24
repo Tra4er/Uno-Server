@@ -22,18 +22,18 @@ public class SocketConnection extends Thread {
 	private Game game;
 	private Player player;
 
-	public SocketConnection(Socket socket, Game game) {
+	public SocketConnection(Socket socket, Game game) throws IOException {
 		this.socket = socket;
 		this.game = game;
+		
+		inStream = new InputStreamReader(socket.getInputStream());
+		buffReader = new BufferedReader(inStream);
+		printStream = new PrintStream(socket.getOutputStream());
 	}
 
 	@Override
 	public void run() {
 		try {
-			inStream = new InputStreamReader(socket.getInputStream());
-			buffReader = new BufferedReader(inStream);
-			printStream = new PrintStream(socket.getOutputStream());
-
 			String message = buffReader.readLine();
 			System.out.println("First message: " + message);
 
@@ -42,16 +42,17 @@ public class SocketConnection extends Thread {
 				player = new Player(createId(), message);
 				game.players.add(player);
 				System.out.println("Created and added player: " + game.players.toString());
-				printStream.print(player.id + STRING_TERMINATOR);
+				printStream.print(player.id);
 				System.out.println("Sent id to player");
 				startDialog(message);
 			} else if(message.equals("reconnect")){ // TODO impl
 //				player = game.players.getPlayerWithId("id");
 //				printStream.print("hello my old friend");
-				startDialog(message);
+//				startDialog(message);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			printStream.print("helloError");
 		}
 	}
 
@@ -76,7 +77,7 @@ public class SocketConnection extends Thread {
 			try {
 				message = waitForMessage();
 				if (message.equals("id")) {
-					System.out.println("id");
+					System.out.println("Got word id");
 					message = waitForMessage();
 					if (Integer.parseInt(message, 16) > 0) {
 						for (Player player1 : game.players) {
@@ -99,7 +100,7 @@ public class SocketConnection extends Thread {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				printStream.print("error"); // TODO
+				printStream.print("dialogError"); // TODO
 			}
 		}
 	}

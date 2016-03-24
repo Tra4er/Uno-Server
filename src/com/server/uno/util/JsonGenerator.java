@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.json.simple.JSONObject;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.server.uno.model.Game;
@@ -12,6 +13,7 @@ import com.server.uno.model.Player;
 public class JsonGenerator {
 
 	private JsonObject json;
+	private Gson g = new Gson();
 
 	private Game game;
 	private Player player;
@@ -68,7 +70,7 @@ public class JsonGenerator {
 		json.add("cards", jsonCards);
 		json.addProperty("currentPlayer", player.getName()); 
 		json.addProperty("timeToMove", player.getTimeToMove()); 
-		json.addProperty("cardsInDeck", game.desk.getCardsInDeck());
+		json.addProperty("cardsInDeck", game.desk.getNumberOfCardsInDeck());
 		json.addProperty("lastCardOnTable", game.desk.getLastCardOnTable());
 	}
 	

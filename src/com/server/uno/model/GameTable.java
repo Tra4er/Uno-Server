@@ -1,24 +1,49 @@
 package com.server.uno.model;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class GameTable {
 	
-	public static final int FULL_DECK = 108;
+	public static final int FULL_DECK = 107;
 	
 	private volatile int cardsInDeck = FULL_DECK;
-	private volatile int lastCardOnTable; // TODO change type
+	private volatile Deque<Card> deck = new ArrayDeque<>(FULL_DECK);
+	private volatile Card topOpenCard;
 	
-	public int getCardsInDeck() {
-		return cardsInDeck;
+	/**
+	 * @return Returns number of cards in deck. Count starts from 0.
+	 */
+	public int getNumberOfCardsInDeck() {
+		return cardsInDeck; 
 	}
-	public void setCardsInDeck(int cardsInDeck) {
-		if(cardsInDeck < 0 || cardsInDeck > 108) 
-			throw new IllegalArgumentException("Wrong number of cards: " + cardsInDeck);
-		this.cardsInDeck = cardsInDeck;
+	
+	public Card getCardFromDeck() {
+		cardsInDeck--;
+		return deck.pop();
 	}
-	public int getLastCardOnTable() {
-		return lastCardOnTable;
+	
+	public void shuffleDeck() {
+		// TODO IMLP
 	}
-	public void setLastCardOnTable(int lastCartOnTable) { // TODO 
-		this.lastCardOnTable = lastCartOnTable;
+
+	public Deque<Card> getDeck() {
+		return deck;
+	}
+
+	public void setDeck(Deque<Card> deck) {
+		if(deck == null)
+			throw new NullPointerException("Wrong cards array");
+		this.deck = deck;
+	}
+
+	public Card getTopOpenCard() {
+		return topOpenCard;
+	}
+
+	public void setTopOpenCard(Card topCard) {
+		if(topCard == null) 
+			throw new NullPointerException("Wrong top card");
+		this.topOpenCard = topCard;
 	}
 }

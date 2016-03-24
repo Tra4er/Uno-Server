@@ -29,9 +29,11 @@ public class Server {
 			serverSocket = new ServerSocket(PORT);
 			while (true) {
 				socket = serverSocket.accept();
+				System.out.println("Client accepted");
 				SocketConnection newConnection = new SocketConnection(socket, game);
-				newConnection.run(); // TODO notify for all my connections
+				newConnection.start(); // TODO notify for all my connections
 //				threadPool.add(newConnection);
+				System.out.println(".");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
