@@ -3,13 +3,13 @@ package com.server.uno;
 import java.io.IOException;
 import java.net.SocketException;
 
+import org.json.JSONException;
+
 import com.server.uno.controller.Server;
-import com.server.uno.util.JsonWorker;
 
 public class Starter {
 
-	public static void main(String[] args) throws SocketException {
-		JsonWorker j = new JsonWorker();
+	public static void main(String[] args) throws SocketException, JSONException {
 		Server server = new Server(10060);
 		try {
 			server.run();

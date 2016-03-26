@@ -9,12 +9,13 @@ import com.server.uno.model.Player;
 public class Game {
 
 	private volatile String status = "inRoom";
-	private volatile TreeSet<Player> players = new TreeSet<>(); // TODO MB its's a bad choice
+	private volatile TreeSet<Player> players = new TreeSet<>(); // TODO MB its's
+																// a bad choice
 	private Player playerGoesNow;
 	private volatile int playersToGo;
 	private volatile int timeToMakeMove; // bad name?
 	private GameTable desk = new GameTable();
-	
+
 	public void start() {
 		desk.shuffleDeck();
 		// TODO imlp
@@ -25,16 +26,19 @@ public class Game {
 	}
 
 	public void changeStatus(String status) {
-		if (!status.equals("inRoom") || !status.equals("inGame") || !status.equals("move")) { // TODO make other statuses 
+		if (!status.equals("inRoom") || !status.equals("inGame") || !status.equals("move")) { // TODO
+																								// make
+																								// other
+																								// statuses
 			throw new IllegalArgumentException("Wrong game status: " + status);
 		}
 		this.status = status;
 	}
-	
+
 	public Set<Player> getPlayers() {
 		return players;
 	}
-	
+
 	public void addPlayer(Player player) {
 		players.add(player);
 	}
@@ -44,7 +48,7 @@ public class Game {
 	}
 
 	public void setPlayerGoesNow(Player playerGoesNow) {
-		if(playerGoesNow == null)
+		if (playerGoesNow == null)
 			throw new NullPointerException("Wrong playerGoesNow");
 		this.playerGoesNow = playerGoesNow;
 	}
@@ -54,9 +58,29 @@ public class Game {
 	}
 
 	public void setPlayersToGo(int playersToGo) {
-		if(playersToGo < 0)
+		if (playersToGo < 0)
 			throw new IllegalArgumentException("Wrong playersToGo number");
 		this.playersToGo = playersToGo;
+	}
+
+	public int getTimeToMakeMove() {
+		return timeToMakeMove;
+	}
+
+	public void setTimeToMakeMove(int timeToMakeMove) {
+		if (timeToMakeMove < 0)
+			throw new IllegalArgumentException("Wrong timeToMakeMove");
+		this.timeToMakeMove = timeToMakeMove;
+	}
+
+	public GameTable getDesk() {
+		return desk;
+	}
+
+	public void setDesk(GameTable desk) { // Maybe i don't need this meth
+		if (desk == null)
+			throw new NullPointerException("Wrong desk");
+		this.desk = desk;
 	}
 
 }

@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Map;
+
+import org.json.JSONObject;
 
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
-import com.server.uno.util.JsonGenerator;
+import com.server.uno.util.JsonWorker;
 
 public class SocketConnection extends Thread {
 
@@ -22,10 +25,14 @@ public class SocketConnection extends Thread {
 	private Game game;
 	private Player player;
 
+	private JsonWorker jsonWorker;
+
 	public SocketConnection(Socket socket, Game game) throws IOException {
 		this.socket = socket;
 		this.game = game;
-		
+
+		jsonWorker = new JsonWorker(game);
+
 		inStream = new InputStreamReader(socket.getInputStream());
 		buffReader = new BufferedReader(inStream);
 		printStream = new PrintStream(socket.getOutputStream());
@@ -34,21 +41,23 @@ public class SocketConnection extends Thread {
 	@Override
 	public void run() {
 		try {
-			String message = buffReader.readLine();
-			System.out.println("First message: " + message);
+			jsonWorker.parseToNewJson(buffReader.readLine());
+			System.out.println("First message: " + jsonWorker);
 
-			if (message.equals("hello")) { // First contact
-				message = waitForMessage();
-				player = new Player(createId(), message);
-				game.players.add(player);
-				System.out.println("Created and added player: " + game.players.toString());
-				printStream.print(player.id);
-				System.out.println("Sent id to player");
-				startDialog(message);
-			} else if(message.equals("reconnect")){ // TODO impl
-//				player = game.players.getPlayerWithId("id");
-//				printStream.print("hello my old friend");
-//				startDialog(message);
+			if (jsonWorker.getStatus().equals("newConnection")) {
+				player = new Player(createId(), jsonWorker.getName());
+				jsonWorker.setPlayer(player);
+				game.getPlayers().add(player);
+				System.out.println("Created and added player: " + player);
+				System.out.println("Players Data Base: " + game.getPlayers());
+				printStream.print(jsonWorker.generateNewConnectionJsone());
+				System.out.println("Sent json to player");
+				startDialog();
+			} else if (jsonWorker.getStatus().equals("reconnect")) { // TODO
+																		// impl
+//				 player = game.players.getPlayerWithId("id");
+				// printStream.print("hello my old friend");
+				// startDialog(message);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,44 +72,25 @@ public class SocketConnection extends Thread {
 
 	private String waitForMessage() throws IOException {
 		try {
-			while (!buffReader.ready()) {
-			}
+			while (!buffReader.ready());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return buffReader.readLine();
 	}
-	
-	private void startDialog(String message){
+
+	private void startDialog() {
 		System.out.println("Started dialog");
 		while (!socket.isClosed()) {
 			try {
-				message = waitForMessage();
-				if (message.equals("id")) {
-					System.out.println("Got word id");
-					message = waitForMessage();
-					if (Integer.parseInt(message, 16) > 0) {
-						for (Player player1 : game.players) {
-							if (player1.id.equals(message)) {
-								String jsonAnswer = new JsonGenerator(game, player1).getJsonObjectAsString()
-										+ STRING_TERMINATOR;
-								printStream.print(jsonAnswer);
-								System.out.println(jsonAnswer);
-							}
-						}
-					}
-				}
+				printStream.print(jsonWorker.generateGameData());
+				System.out.println("Sent Game Data");
+				
+				jsonWorker.parseToNewJson(waitForMessage());
 
-				message = waitForMessage();
-				if (message.equals("bye")) {
-					System.out.println("Client Bye");
-					printStream.print("bye");
-					socket.close();
-					interrupt();
-				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				printStream.print("dialogError"); // TODO
+				printStream.print("dialogError"); 
 			}
 		}
 	}
