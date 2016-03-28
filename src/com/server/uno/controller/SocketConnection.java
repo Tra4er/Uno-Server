@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.Map;
 
-import org.json.JSONObject;
+import org.json.JSONException;
 
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
@@ -44,24 +43,49 @@ public class SocketConnection extends Thread {
 			jsonWorker.parseToNewJson(buffReader.readLine());
 			System.out.println("First message: " + jsonWorker);
 
-			if (jsonWorker.getStatus().equals("newConnection")) {
-				player = new Player(createId(), jsonWorker.getName());
+			if (jsonWorker.getRequestStatus().equals("newConnection")) {
+				player = new Player(createId(), jsonWorker.getPlayerName());
 				jsonWorker.setPlayer(player);
 				game.getPlayers().add(player);
 				System.out.println("Created and added player: " + player);
-				System.out.println("Players Data Base: " + game.getPlayers());
-				printStream.print(jsonWorker.generateNewConnectionJsone());
+				printStream.println(jsonWorker.generateNewConnectionResponse());
+				printStream.flush();
+				System.out.println(jsonWorker.generateNewConnectionResponse());
 				System.out.println("Sent json to player");
 				startDialog();
-			} else if (jsonWorker.getStatus().equals("reconnect")) { // TODO
-																		// impl
-//				 player = game.players.getPlayerWithId("id");
-				// printStream.print("hello my old friend");
-				// startDialog(message);
+			} else if (jsonWorker.getRequestStatus().equals("reconnect")) { // TODO
+//				 player = game
+//				 printStream.print("hello my old friend");
+//				 startDialog(message);
+			} else {
+				printStream.print("helloError");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			printStream.print("helloError");
+		}
+	}
+
+	private void startDialog() {
+		System.out.println("Started dialog");
+		while (!socket.isClosed()) {
+			try {
+				sendUpdates();
+				jsonWorker.parseToNewJson(waitForMessage()); // Stops here and wait for new message
+				System.out.println("Request: " + jsonWorker);
+			} catch (Exception e) {
+				e.printStackTrace();
+				printStream.print("dialogError");
+			}
+		}
+	}
+	
+	public void sendUpdates() {
+		try {
+			printStream.println(jsonWorker.generateGameData());
+			System.out.println("Sent Updates");
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -78,21 +102,4 @@ public class SocketConnection extends Thread {
 		}
 		return buffReader.readLine();
 	}
-
-	private void startDialog() {
-		System.out.println("Started dialog");
-		while (!socket.isClosed()) {
-			try {
-				printStream.print(jsonWorker.generateGameData());
-				System.out.println("Sent Game Data");
-				
-				jsonWorker.parseToNewJson(waitForMessage());
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				printStream.print("dialogError"); 
-			}
-		}
-	}
-
 }

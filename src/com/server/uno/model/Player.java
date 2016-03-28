@@ -1,10 +1,7 @@
 package com.server.uno.model;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.server.uno.model.Player;
 
 public class Player implements Comparable<Player> {
 

@@ -8,8 +8,8 @@ import com.server.uno.model.Player;
 
 public class JsonWorker {
 
-	private JSONObject inputJson;
-	private JSONObject outputJson;
+	private JSONObject request;
+	private JSONObject response;
 	private Game game;
 	private Player player;
 
@@ -20,48 +20,50 @@ public class JsonWorker {
 	public void parseToNewJson(String json) throws Exception {
 		if (json == null)
 			throw new NullPointerException("Wrong json");
-		inputJson = new JSONObject(json);
+		request = new JSONObject(json);
 	}
 
-	public String getStatus() throws JSONException {
-		return inputJson.getString("status");
+	public String getRequestStatus() throws JSONException {
+		return request.getString("request");
 	}
 
-	public String getName() throws JSONException {
-		return inputJson.getString("name");
+	public String getPlayerName() throws JSONException {
+		return request.getString("name");
 	}
 
-	public String generateNewConnectionJsone() throws JSONException {
-		outputJson = new JSONObject();
-		outputJson.append("status", "newConnection");
-		outputJson.append("id", player.id);
-		return outputJson.toString();
+	public String generateNewConnectionResponse() throws JSONException {
+		response = new JSONObject();
+		response.accumulate("response", "connectionAcquired");
+		response.accumulate("id", player.id);
+		return response.toString();
 	}
 
 	public String generateGameData() throws JSONException {
-		outputJson = new JSONObject();
+		response = new JSONObject();
 		
-		if (game.getStatus().equals("inGame")) {
-			outputJson.accumulate("status", "inGame");
-			outputJson.accumulate("players", game.getPlayers());
-			outputJson.accumulate("cards", player.getCards());
-			outputJson.accumulate("currentPlayerName", player.getName());
-			outputJson.accumulate("topCard", game.getDesk().getTopOpenCard());
-			outputJson.accumulate("timeToMoveEnd", game.getTimeToMakeMove());
-			return outputJson.toString();
+		if (game.getStatus().equals("game")) {
+			response.accumulate("status", "inGame");
+			response.accumulate("players", game.getPlayers());
+			response.accumulate("cards", player.getCards());
+			response.accumulate("currentPlayerName", player.getName());
+			response.accumulate("topCard", game.getDesk().getTopOpenCard());
+			response.accumulate("timeToMoveEnd", game.getTimeToMakeMove());
+			return response.toString();
 		}
-		if (game.getStatus().equals("inRoom")) {
-			outputJson.accumulate("status", "inRoom");
-			outputJson.accumulate("players", game.getPlayers());
-			outputJson.accumulate("playersToGo", game.getPlayersToGo());
-			return outputJson.toString();
+		if (game.getStatus().equals("room")) {
+			JSONObject temp = new JSONObject();
+			temp.accumulate("players", game.getPlayersNames());
+			temp.accumulate("playersToGo", game.getPlayersToGo());
+			response.accumulate("response", temp);
+			System.out.println(response);
+			return response.toString();
 		}
 		if (game.getStatus().equals("move")) {
-			outputJson.accumulate("status", "move");
+			response.accumulate("status", "move");
 //			outputJson.accumulate("card", player.giveCard()); // TODO after implementation of method 
-			return outputJson.toString();
+			return response.toString();
 		}
-
+		System.out.println("Sent null");
 		return null;
 	}
 
@@ -77,6 +79,6 @@ public class JsonWorker {
 
 	@Override
 	public String toString() {
-		return "JsonWorker [jsonObject=" + inputJson + "]";
+		return "JsonWorker [jsonObject=" + request + "]";
 	}
 }

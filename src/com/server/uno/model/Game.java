@@ -1,5 +1,7 @@
 package com.server.uno.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -8,7 +10,8 @@ import com.server.uno.model.Player;
 
 public class Game {
 
-	private volatile String status = "inRoom";
+	private volatile String status = "room";
+	public volatile boolean statusChanged;
 	private volatile TreeSet<Player> players = new TreeSet<>(); // TODO MB its's
 																// a bad choice
 	private Player playerGoesNow;
@@ -26,13 +29,18 @@ public class Game {
 	}
 
 	public void changeStatus(String status) {
-		if (!status.equals("inRoom") || !status.equals("inGame") || !status.equals("move")) { // TODO
-																								// make
-																								// other
-																								// statuses
+		if (!status.equals("inRoom") || !status.equals("inGame") || !status.equals("move"))
 			throw new IllegalArgumentException("Wrong game status: " + status);
-		}
 		this.status = status;
+		statusChanged = true;
+	}
+	
+	public List<String> getPlayersNames() {
+		ArrayList<String> names = new ArrayList<>();
+		for(Player p : players) {
+			names.add(p.getName());
+		}
+		return names;
 	}
 
 	public Set<Player> getPlayers() {
