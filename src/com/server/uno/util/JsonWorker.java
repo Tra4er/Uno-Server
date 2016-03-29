@@ -3,6 +3,7 @@ package com.server.uno.util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.server.uno.model.Card;
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
 
@@ -30,6 +31,10 @@ public class JsonWorker {
 	public String getPlayerName() throws JSONException {
 		return request.getString("name");
 	}
+	
+	public Card getMoverCard() throws JSONException {
+		return (Card) request.get("card");
+	}
 
 	public String generateNewConnectionResponse() throws JSONException {
 		response = new JSONObject();
@@ -41,16 +46,17 @@ public class JsonWorker {
 	public String generateGameData() throws JSONException {
 		response = new JSONObject();
 		
-		if (game.getStatus().equals("game")) {
+		if (game.getStatus().equals("inGame")) {
 			response.accumulate("status", "inGame");
 			response.accumulate("players", game.getPlayers());
 			response.accumulate("cards", player.getCards());
 			response.accumulate("currentPlayerName", player.getName());
-			response.accumulate("topCard", game.getDesk().getTopOpenCard());
+			response.accumulate("topCard", game.getTable().getTopOpenCard());
 			response.accumulate("timeToMoveEnd", game.getTimeToMakeMove());
+			response.accumulate("mover", game.getPlayerGoesNow());
 			return response.toString();
 		}
-		if (game.getStatus().equals("room")) {
+		if (game.getStatus().equals("inRoom")) {
 			JSONObject temp = new JSONObject();
 			temp.accumulate("players", game.getPlayersNames());
 			temp.accumulate("playersToGo", game.getPlayersToGo());

@@ -20,18 +20,14 @@ public class Player implements Comparable<Player> {
 		setName(name);
 	}
 	
-	public void takeCard(Card card) {
+	public void addCard(Card card) {
 		if(card == null) 
 			throw new NullPointerException("Wrong card");
 		cards.add(card);
 	}
 	
-	public Card giveCard() {
-		Card temp = cards.get(1); // !
-//		((LinkedList<Card>) cards).contains(o);
-		((LinkedList<Card>) cards).removeFirstOccurrence(temp);
-		return temp;
-//		TODO Continue impl!!!
+	public void givesCard(Card card) {
+		cards.remove(card);
 	}
 
 	public String getName() {

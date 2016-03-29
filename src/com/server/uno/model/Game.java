@@ -1,27 +1,38 @@
 package com.server.uno.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
-
-import com.server.uno.model.GameTable;
-import com.server.uno.model.Player;
 
 public class Game {
+	
+	public final int PLAYERS_NEEDED_TO_START = 2;
+	public final int START_CARDS_NUMBER = 7;
 
 	private volatile String status = "room";
 	public volatile boolean statusChanged;
-	private volatile TreeSet<Player> players = new TreeSet<>(); // TODO MB its's
-																// a bad choice
+	
+	private volatile Set<Player> players = new HashSet<>();
 	private Player playerGoesNow;
-	private volatile int playersToGo;
+	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile int timeToMakeMove; // bad name?
-	private GameTable desk = new GameTable();
+	private GameTable table = new GameTable(); // Change visibility 
 
 	public void start() {
-		desk.shuffleDeck();
-		// TODO imlp
+		changeStatus("inGame");
+		table.shuffleDeck();
+		boolean mover = true;
+		for(Player player : players){
+			for(int i = 0; i < START_CARDS_NUMBER; i++) {
+				player.addCard(table.getCardFromDeck());
+			}
+			if(mover) { // TODO Who first connected
+				playerGoesNow = player;
+				mover = false;
+			}
+		}
+		
 	}
 
 	public String getStatus() {
@@ -49,6 +60,7 @@ public class Game {
 
 	public void addPlayer(Player player) {
 		players.add(player);
+		playersToGo--;
 	}
 
 	public Player getPlayerGoesNow() {
@@ -81,14 +93,14 @@ public class Game {
 		this.timeToMakeMove = timeToMakeMove;
 	}
 
-	public GameTable getDesk() {
-		return desk;
+	public GameTable getTable() {
+		return table;
 	}
 
-	public void setDesk(GameTable desk) { // Maybe i don't need this meth
+	public void setTable(GameTable desk) { // Maybe i don't need this meth
 		if (desk == null)
 			throw new NullPointerException("Wrong desk");
-		this.desk = desk;
+		this.table = desk;
 	}
 
 }

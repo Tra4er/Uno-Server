@@ -27,6 +27,11 @@ public class Server {
 
 	public void run() throws Exception {
 		while (true) {
+			if(game.getStatus().equals("inRoom") && game.getPlayersToGo() <= 0){
+				game.start();
+			} else if(game.getPlayersToGo() >= 0 && game.getStatus().equals("inGame")) {
+//				game.wait(); // TODO If players disconnected and the game has not enough players
+			}
 			if (game.statusChanged) {
 				socketsController.sendUpdatesToAllClients();
 			}

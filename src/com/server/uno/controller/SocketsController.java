@@ -38,5 +38,6 @@ public class SocketsController extends Thread {
 		for(SocketConnection conn : connections) {
 			conn.sendUpdates();
 		}
+		game.statusChanged = false;
 	}
 }

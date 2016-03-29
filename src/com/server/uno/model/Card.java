@@ -15,8 +15,8 @@ public class Card {
 	}
 
 	public void setColor(String color) {
-		if (!color.equals("red") || !color.equals("yellow") || !color.equals("green") || !color.equals("blue")
-				|| !color.equals("black"))
+		if (!color.equals("red") && !color.equals("yellow") && !color.equals("green") && !color.equals("blue")
+				&& !color.equals("black"))
 			throw new IllegalArgumentException("Wrong card color: " + color);
 		this.color = color;
 	}
@@ -26,9 +26,13 @@ public class Card {
 	}
 
 	public void setNumber(int number) {
-		if (number < 0 && number > 14) // TODO Mb number is to big?
+		if (number < 0 && number > 14)
 			throw new IllegalArgumentException("Wrong card number: " + number);
 		this.number = number;
 	}
 
+	@Override
+	public String toString() {
+		return "Card [color=" + color + ", number=" + number + "]\n";
+	}
 }

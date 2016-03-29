@@ -53,10 +53,16 @@ public class SocketConnection extends Thread {
 				System.out.println(jsonWorker.generateNewConnectionResponse());
 				System.out.println("Sent json to player");
 				startDialog();
-			} else if (jsonWorker.getRequestStatus().equals("reconnect")) { // TODO
-//				 player = game
-//				 printStream.print("hello my old friend");
-//				 startDialog(message);
+			} else if (jsonWorker.getRequestStatus().equals("reconnect")) {
+				String reconnectedPlayerId = jsonWorker.getPlayer().id;
+				for (Player temp : game.getPlayers()) {
+					if (temp.id.equals(reconnectedPlayerId)) {
+						player = new Player(temp.id, temp.getName());
+						break;
+					}
+				}
+				printStream.print("hello my old friend"); // TODO
+				startDialog();
 			} else {
 				printStream.print("helloError");
 			}
@@ -71,15 +77,19 @@ public class SocketConnection extends Thread {
 		while (!socket.isClosed()) {
 			try {
 				sendUpdates();
-				jsonWorker.parseToNewJson(waitForMessage()); // Stops here and wait for new message
+				jsonWorker.parseToNewJson(waitForMessage());
 				System.out.println("Request: " + jsonWorker);
+				if(jsonWorker.getRequestStatus().equals("move")) {
+					player.givesCard(jsonWorker.getMoverCard());
+					game.getTable().setTopOpenCard(jsonWorker.getMoverCard());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				printStream.print("dialogError");
 			}
 		}
 	}
-	
+
 	public void sendUpdates() {
 		try {
 			printStream.println(jsonWorker.generateGameData());
@@ -96,7 +106,8 @@ public class SocketConnection extends Thread {
 
 	private String waitForMessage() throws IOException {
 		try {
-			while (!buffReader.ready());
+			while (!buffReader.ready())
+				;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
