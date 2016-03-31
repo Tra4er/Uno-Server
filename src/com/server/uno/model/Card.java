@@ -9,6 +9,11 @@ public class Card {
 		setColor(color);
 		setNumber(number);
 	}
+	
+	public Card(Card card) {
+		color = card.color;
+		number = card.number;
+	}
 
 	public String getColor() {
 		return color;

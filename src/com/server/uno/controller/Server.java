@@ -32,7 +32,7 @@ public class Server {
 			} else if(game.getPlayersToGo() >= 0 && game.getStatus().equals("inGame")) {
 //				game.wait(); // TODO If players disconnected and the game has not enough players
 			}
-			if (game.statusChanged) {
+			if (game.changed) {
 				socketsController.sendUpdatesToAllClients();
 			}
 		}

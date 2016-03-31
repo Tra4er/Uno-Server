@@ -11,6 +11,7 @@ import org.json.JSONException;
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
 import com.server.uno.util.JsonWorker;
+import com.server.uno.util.RulesChecker;
 
 public class SocketConnection extends Thread {
 
@@ -46,12 +47,11 @@ public class SocketConnection extends Thread {
 			if (jsonWorker.getRequestStatus().equals("newConnection")) {
 				player = new Player(createId(), jsonWorker.getPlayerName());
 				jsonWorker.setPlayer(player);
-				game.getPlayers().add(player);
+				game.addPlayer(player);
 				System.out.println("Created and added player: " + player);
 				printStream.println(jsonWorker.generateNewConnectionResponse());
 				printStream.flush();
-				System.out.println(jsonWorker.generateNewConnectionResponse());
-				System.out.println("Sent json to player");
+				System.out.println("Sent newConnection json");
 				startDialog();
 			} else if (jsonWorker.getRequestStatus().equals("reconnect")) {
 				String reconnectedPlayerId = jsonWorker.getPlayer().id;
@@ -76,13 +76,10 @@ public class SocketConnection extends Thread {
 		System.out.println("Started dialog");
 		while (!socket.isClosed()) {
 			try {
-				sendUpdates();
 				jsonWorker.parseToNewJson(waitForMessage());
 				System.out.println("Request: " + jsonWorker);
-				if(jsonWorker.getRequestStatus().equals("move")) {
-					player.givesCard(jsonWorker.getMoverCard());
-					game.getTable().setTopOpenCard(jsonWorker.getMoverCard());
-				}
+				if(jsonWorker.getRequestStatus().equals("move"))
+					RulesChecker.putAndCheckMoverCard(player, game, jsonWorker);
 			} catch (Exception e) {
 				e.printStackTrace();
 				printStream.print("dialogError");
@@ -93,7 +90,7 @@ public class SocketConnection extends Thread {
 	public void sendUpdates() {
 		try {
 			printStream.println(jsonWorker.generateGameData());
-			System.out.println("Sent Updates");
+			System.out.println("Sent Updates: " + jsonWorker.generateGameData());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

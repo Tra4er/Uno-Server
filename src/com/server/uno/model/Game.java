@@ -10,10 +10,10 @@ public class Game {
 	public final int PLAYERS_NEEDED_TO_START = 2;
 	public final int START_CARDS_NUMBER = 7;
 
-	private volatile String status = "room";
-	public volatile boolean statusChanged;
+	public volatile boolean changed;
 	
-	private volatile Set<Player> players = new HashSet<>();
+	private volatile String status = "inRoom";
+	private volatile Set<Player> players = new HashSet<>(); // Change visibility
 	private Player playerGoesNow;
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile int timeToMakeMove; // bad name?
@@ -40,10 +40,10 @@ public class Game {
 	}
 
 	public void changeStatus(String status) {
-		if (!status.equals("inRoom") || !status.equals("inGame") || !status.equals("move"))
+		if (!status.equals("inRoom") && !status.equals("inGame") && !status.equals("move"))
 			throw new IllegalArgumentException("Wrong game status: " + status);
 		this.status = status;
-		statusChanged = true;
+		changed = true;
 	}
 	
 	public List<String> getPlayersNames() {
@@ -61,6 +61,7 @@ public class Game {
 	public void addPlayer(Player player) {
 		players.add(player);
 		playersToGo--;
+		changed = true;
 	}
 
 	public Player getPlayerGoesNow() {
@@ -71,6 +72,7 @@ public class Game {
 		if (playerGoesNow == null)
 			throw new NullPointerException("Wrong playerGoesNow");
 		this.playerGoesNow = playerGoesNow;
+		changed = true;
 	}
 
 	public int getPlayersToGo() {
@@ -81,6 +83,7 @@ public class Game {
 		if (playersToGo < 0)
 			throw new IllegalArgumentException("Wrong playersToGo number");
 		this.playersToGo = playersToGo;
+		changed = true;
 	}
 
 	public int getTimeToMakeMove() {
@@ -91,6 +94,7 @@ public class Game {
 		if (timeToMakeMove < 0)
 			throw new IllegalArgumentException("Wrong timeToMakeMove");
 		this.timeToMakeMove = timeToMakeMove;
+		changed = true;
 	}
 
 	public GameTable getTable() {

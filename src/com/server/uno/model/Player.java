@@ -43,7 +43,7 @@ public class Player implements Comparable<Player> {
 	public List<Card> getCards() {
 		return cards;
 	}
-
+	
 	public void setCards(List<Card> cards) {
 		if(cards == null) 
 			throw new NullPointerException("Wrong cards list");

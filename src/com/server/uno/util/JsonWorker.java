@@ -1,5 +1,6 @@
 package com.server.uno.util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,35 +39,47 @@ public class JsonWorker {
 
 	public String generateNewConnectionResponse() throws JSONException {
 		response = new JSONObject();
-		response.accumulate("response", "connectionAcquired");
-		response.accumulate("id", player.id);
+		response.put("response", "connectionAcquired");
+		response.put("id", player.id);
 		return response.toString();
 	}
 
 	public String generateGameData() throws JSONException {
 		response = new JSONObject();
 		
-		if (game.getStatus().equals("inGame")) {
-			response.accumulate("status", "inGame");
-			response.accumulate("players", game.getPlayers());
-			response.accumulate("cards", player.getCards());
-			response.accumulate("currentPlayerName", player.getName());
-			response.accumulate("topCard", game.getTable().getTopOpenCard());
-			response.accumulate("timeToMoveEnd", game.getTimeToMakeMove());
-			response.accumulate("mover", game.getPlayerGoesNow());
+		if (game.getStatus().equals("inGame")) { // TODO
+			JSONObject data = new JSONObject();
+			data.put("state", "inGame");
+			JSONArray players = new JSONArray();
+			for(Player temp : game.getPlayers()) {
+				JSONObject playersJson = new JSONObject();
+				playersJson.put("name", temp.getName());
+				playersJson.put("cardsNumber", temp.getCards().size());
+				players.put(playersJson);
+			}
+			data.put("players", players);
+			JSONArray cards = new JSONArray();
+			for(Card card : player.getCards()){
+				JSONObject cardsJson = new JSONObject();
+				cardsJson.put("color", card.getColor());
+				cardsJson.put("value", card.getNumber());
+				cards.put(cardsJson);
+			}
+			data.put("cards", cards);
+			data.put("currentPlayerName", player.getName());
+			data.put("topCard", game.getTable().getTopOpenCard());
+			data.put("timeToMoveEnd", game.getTimeToMakeMove());
+			data.put("mover", game.getPlayerGoesNow().getName());
+			response.put("response", data);
 			return response.toString();
 		}
 		if (game.getStatus().equals("inRoom")) {
-			JSONObject temp = new JSONObject();
-			temp.accumulate("players", game.getPlayersNames());
-			temp.accumulate("playersToGo", game.getPlayersToGo());
-			response.accumulate("response", temp);
+			JSONObject data = new JSONObject();
+			data.put("players", game.getPlayersNames());
+			data.put("playersToGo", game.getPlayersToGo());
+			data.put("state", "inRoom");
+			response.put("response", data);
 			System.out.println(response);
-			return response.toString();
-		}
-		if (game.getStatus().equals("move")) {
-			response.accumulate("status", "move");
-//			outputJson.accumulate("card", player.giveCard()); // TODO after implementation of method 
 			return response.toString();
 		}
 		System.out.println("Sent null");
