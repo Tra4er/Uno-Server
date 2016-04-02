@@ -5,34 +5,44 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.server.uno.util.StepTimer;
+
 public class Game {
-	
+
 	public final int PLAYERS_NEEDED_TO_START = 2;
 	public final int START_CARDS_NUMBER = 7;
+	public final int STEP_TIME = 45;
 
+	public volatile boolean started;
 	public volatile boolean changed;
-	
+
 	private volatile String status = "inRoom";
 	private volatile Set<Player> players = new HashSet<>(); // Change visibility
 	private Player playerGoesNow;
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
-	private volatile int timeToMakeMove; // bad name?
-	private GameTable table = new GameTable(); // Change visibility 
+	private volatile StepTimer timer = new StepTimer(STEP_TIME);
+	private GameTable table = new GameTable(); // Change visibility
 
 	public void start() {
 		changeStatus("inGame");
 		table.shuffleDeck();
 		boolean mover = true;
-		for(Player player : players){
-			for(int i = 0; i < START_CARDS_NUMBER; i++) {
+		for (Player player : players) {
+			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			if(mover) { // TODO Who first connected
+			if (mover) { // TODO Who first connected
 				playerGoesNow = player;
 				mover = false;
 			}
 		}
-		
+		timer.start();
+		started = true;
+		play();
+	}
+
+	public void play() {
+		// TODO
 	}
 
 	public String getStatus() {
@@ -42,13 +52,15 @@ public class Game {
 	public void changeStatus(String status) {
 		if (!status.equals("inRoom") && !status.equals("inGame") && !status.equals("move"))
 			throw new IllegalArgumentException("Wrong game status: " + status);
-		this.status = status;
+		if (status.equals("inGame"))
+			started = true;
 		changed = true;
+		this.status = status;
 	}
-	
+
 	public List<String> getPlayersNames() {
 		ArrayList<String> names = new ArrayList<>();
-		for(Player p : players) {
+		for (Player p : players) {
 			names.add(p.getName());
 		}
 		return names;
@@ -86,15 +98,8 @@ public class Game {
 		changed = true;
 	}
 
-	public int getTimeToMakeMove() {
-		return timeToMakeMove;
-	}
-
-	public void setTimeToMakeMove(int timeToMakeMove) {
-		if (timeToMakeMove < 0)
-			throw new IllegalArgumentException("Wrong timeToMakeMove");
-		this.timeToMakeMove = timeToMakeMove;
-		changed = true;
+	public int getStepTime() {
+		return timer.getTime();
 	}
 
 	public GameTable getTable() {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 import com.server.uno.model.Game;
+import com.server.uno.util.CardsManager;
 
 public class Server {
 
@@ -13,6 +14,7 @@ public class Server {
 	private SocketsController socketsController;
 
 	private Game game = new Game();
+	private CardsManager cardsManager = new CardsManager(game);
 
 	public Server(int port) {
 		PORT = port;
@@ -27,14 +29,21 @@ public class Server {
 
 	public void run() throws Exception {
 		while (true) {
-			if(game.getStatus().equals("inRoom") && game.getPlayersToGo() <= 0){
-				game.start();
-			} else if(game.getPlayersToGo() >= 0 && game.getStatus().equals("inGame")) {
-//				game.wait(); // TODO If players disconnected and the game has not enough players
+			if (game.getPlayersToGo() <= 0 && game.started) {
+				game.play();
+				if (game.changed) {
+					socketsController.sendUpdatesToAllClients();
+				}
+				continue;
 			}
-			if (game.changed) {
+			// Preparation state
+			if (game.getPlayersToGo() > 0) { 
+				game.changeStatus("inRoom");
 				socketsController.sendUpdatesToAllClients();
-			}
+				while(!game.changed);
+			} else if (game.getPlayersToGo() <= 0 && !game.started) {
+				game.start();
+			} 
 		}
 	}
 }

@@ -6,13 +6,12 @@ import com.server.uno.model.Player;
 
 public class RulesChecker {
 
-	public static void putAndCheckMoverCard(Player player, Game game, JsonWorker jsonWorker) throws Exception {
-		Card card = new Card(jsonWorker.getMoverCard());
+	public static boolean checkStep(Game game, Card card) {
 		Card topCard = new Card(game.getTable().getTopOpenCard());
-		if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()) {
-			player.givesCard(card);
-			game.getTable().setTopOpenCard(card);
+		if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()
+				|| card.getNumber() == 13 || card.getNumber() == 14) {
+			return true;
 		}
-//		game.changed = true;
+		return false;
 	}
 }

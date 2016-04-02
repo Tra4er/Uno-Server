@@ -11,6 +11,8 @@ public class Player implements Comparable<Player> {
 	private volatile String name;
 	private volatile List<Card> cards = new LinkedList<>();
 	
+	public volatile boolean tamer; // TODO 
+	
 	public Player(String id) {
 		this(id, STANDART_NAME);
 	}
@@ -26,7 +28,9 @@ public class Player implements Comparable<Player> {
 		cards.add(card);
 	}
 	
-	public void givesCard(Card card) {
+	public void removeCard(Card card) {
+		if(card == null || !cards.contains(card))
+			throw new IllegalArgumentException("Wrong card");
 		cards.remove(card);
 	}
 

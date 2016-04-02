@@ -78,8 +78,8 @@ public class SocketConnection extends Thread {
 			try {
 				jsonWorker.parseToNewJson(waitForMessage());
 				System.out.println("Request: " + jsonWorker);
-				if(jsonWorker.getRequestStatus().equals("move"))
-					RulesChecker.putAndCheckMoverCard(player, game, jsonWorker);
+//				if(jsonWorker.getRequestStatus().equals("move"))
+//					RulesChecker.putAndCheckMoverCard(player, game, jsonWorker);
 			} catch (Exception e) {
 				e.printStackTrace();
 				printStream.print("dialogError");
