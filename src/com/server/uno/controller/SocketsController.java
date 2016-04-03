@@ -36,7 +36,7 @@ public class SocketsController extends Thread {
 	
 	public void sendUpdatesToAllClients() {
 		for(SocketConnection conn : connections) {
-			conn.sendUpdates();
+			conn.sendUpdate();
 		}
 		game.changed = false;
 	}

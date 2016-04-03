@@ -10,9 +10,9 @@ public class Server {
 	public final int PORT;
 
 	private ServerSocket serverSocket;
-	private SocketsController socketsController;
+	private static SocketsController socketsController;
 
-	private Game game = new Game();
+	private static Game game = new Game();
 
 	public Server(int port) {
 		PORT = port;
@@ -25,23 +25,21 @@ public class Server {
 		}
 	}
 
-	public void run() throws Exception {
-		while (true) {
-			if (game.getPlayersToGo() <= 0 && game.started) {
-				game.play();
-				if (game.changed) {
-					socketsController.sendUpdatesToAllClients();
-				}
-				continue;
-			}
-			// Preparation state
-			if (game.getPlayersToGo() > 0) { 
-				game.changeStatus("inRoom");
+	public static void update() {
+		if (game.getPlayersToGo() <= 0 && game.started) {
+			game.play();
+			if (game.changed) {
 				socketsController.sendUpdatesToAllClients();
-				while(!game.changed);
-			} else if (game.getPlayersToGo() <= 0 && !game.started) {
-				game.start();
-			} 
+			}
+		}
+		// Preparation state
+		if (game.getPlayersToGo() > 0) {
+			game.changeStatus("inRoom");
+			socketsController.sendUpdatesToAllClients();
+			while (!game.changed)
+				;
+		} else if (game.getPlayersToGo() <= 0 && !game.started) {
+			game.start();
 		}
 	}
 }

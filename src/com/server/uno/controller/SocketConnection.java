@@ -83,6 +83,7 @@ public class SocketConnection extends Thread {
 	private void startDialog() throws Exception {
 		System.out.println("Started dialog");
 		while (!socket.isClosed()) {
+			Server.update();
 			jsonWorker.parseToNewJson(buffReader.readLine());
 			System.out.println("Request: " + jsonWorker);
 			if (jsonWorker.getRequestStatus().equals("move"))
@@ -91,7 +92,7 @@ public class SocketConnection extends Thread {
 		}
 	}
 
-	public void sendUpdates() {
+	public void sendUpdate() {
 		try {
 			printStream.println(jsonWorker.generateGameData());
 			System.out.println("Sent Updates: " + jsonWorker.generateGameData());
