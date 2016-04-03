@@ -47,7 +47,7 @@ public class JsonWorker {
 	public String generateGameData() throws JSONException {
 		response = new JSONObject();
 		
-		if (game.getStatus().equals("inGame")) { // TODO
+		if (game.getStatus().equals("inGame")) { 
 			JSONObject data = new JSONObject();
 			data.put("state", "inGame");
 			JSONArray players = new JSONArray();

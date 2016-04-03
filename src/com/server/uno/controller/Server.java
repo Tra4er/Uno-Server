@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 import com.server.uno.model.Game;
-import com.server.uno.util.CardsManager;
 
 public class Server {
 
@@ -14,7 +13,6 @@ public class Server {
 	private SocketsController socketsController;
 
 	private Game game = new Game();
-	private CardsManager cardsManager = new CardsManager(game);
 
 	public Server(int port) {
 		PORT = port;

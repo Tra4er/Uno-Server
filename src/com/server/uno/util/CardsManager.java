@@ -20,9 +20,13 @@ public class CardsManager {
 		if (player == null || card == null)
 			throw new IllegalArgumentException("Wrong player or card");
 
-		if (RulesChecker.checkStep(game, card)) {
+//		if (RulesManager.checkStep(game, card)) {
 			switch (card.getNumber()) {
 			case 0: {
+				// TODO
+			}
+				break;
+			case 5: {
 				// TODO
 			}
 				break;
@@ -49,10 +53,10 @@ public class CardsManager {
 				}
 			}
 				break;
-			}
-			player.removeCard(card);
-			game.getTable().setTopOpenCard(card);
-			game.changed = true;
+//			}
+//			player.removeCard(card);
+//			game.getTable().setTopOpenCard(card);
+//			game.changed = true;
 		}
 	}
 

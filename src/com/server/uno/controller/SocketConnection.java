@@ -11,7 +11,6 @@ import org.json.JSONException;
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
 import com.server.uno.util.JsonWorker;
-import com.server.uno.util.RulesChecker;
 
 public class SocketConnection extends Thread {
 
@@ -69,21 +68,26 @@ public class SocketConnection extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 			printStream.print("helloError");
+		} finally {
+			try {
+				printStream.close();
+				buffReader.close();
+				inStream.close();
+				socket.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
-	private void startDialog() {
+	private void startDialog() throws Exception {
 		System.out.println("Started dialog");
 		while (!socket.isClosed()) {
-			try {
-				jsonWorker.parseToNewJson(waitForMessage());
-				System.out.println("Request: " + jsonWorker);
-//				if(jsonWorker.getRequestStatus().equals("move"))
-//					RulesChecker.putAndCheckMoverCard(player, game, jsonWorker);
-			} catch (Exception e) {
-				e.printStackTrace();
-				printStream.print("dialogError");
-			}
+			jsonWorker.parseToNewJson(buffReader.readLine());
+			System.out.println("Request: " + jsonWorker);
+			if (jsonWorker.getRequestStatus().equals("move"))
+				game.makeMove(player, jsonWorker.getMoverCard());
+			// TODO
 		}
 	}
 
@@ -99,15 +103,5 @@ public class SocketConnection extends Thread {
 	private String createId() {
 		String id = Integer.toHexString((int) (Math.random() * 1000000));
 		return id;
-	}
-
-	private String waitForMessage() throws IOException {
-		try {
-			while (!buffReader.ready())
-				;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return buffReader.readLine();
 	}
 }

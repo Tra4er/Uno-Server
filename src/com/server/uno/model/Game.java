@@ -17,32 +17,42 @@ public class Game {
 	public volatile boolean changed;
 
 	private volatile String status = "inRoom";
-	private volatile Set<Player> players = new HashSet<>(); // Change visibility
-	private Player playerGoesNow;
+	private volatile Set<Player> players = new HashSet<>(); // Change visibility or meth with final
+	private Player mover;
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
 	private GameTable table = new GameTable(); // Change visibility
+	
+//	public RulesManager rulesManager;
 
 	public void start() {
 		changeStatus("inGame");
 		table.shuffleDeck();
-		boolean mover = true;
+		boolean mover1 = true;
 		for (Player player : players) {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			if (mover) { // TODO Who first connected
-				playerGoesNow = player;
-				mover = false;
+			if (mover1) { // Who first connected
+				mover = player;
+				mover1 = false;
 			}
 		}
 		timer.start();
 		started = true;
-		play();
 	}
 
 	public void play() {
-		// TODO
+		// TODO with rulesManager
+		if(status.equals("move")) {
+//			mover.
+			timer.start();
+		}
+	}
+	
+	public void makeMove(Player player, Card card) {
+		mover = player;
+		changeStatus("move");
 	}
 
 	public String getStatus() {
@@ -77,13 +87,13 @@ public class Game {
 	}
 
 	public Player getPlayerGoesNow() {
-		return playerGoesNow;
+		return mover;
 	}
 
 	public void setPlayerGoesNow(Player playerGoesNow) {
 		if (playerGoesNow == null)
 			throw new NullPointerException("Wrong playerGoesNow");
-		this.playerGoesNow = playerGoesNow;
+		this.mover = playerGoesNow;
 		changed = true;
 	}
 
@@ -105,11 +115,4 @@ public class Game {
 	public GameTable getTable() {
 		return table;
 	}
-
-	public void setTable(GameTable desk) { // Maybe i don't need this meth
-		if (desk == null)
-			throw new NullPointerException("Wrong desk");
-		this.table = desk;
-	}
-
 }
