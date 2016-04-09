@@ -1,7 +1,8 @@
 package com.server.uno.controller;
 
-import java.io.IOException;
 import java.net.ServerSocket;
+
+import org.apache.log4j.Logger;
 
 import com.server.uno.model.Game;
 
@@ -13,6 +14,8 @@ public class Server {
 	private static SocketsController socketsController;
 
 	private static Game game = new Game();
+	
+	public static Logger log = Logger.getLogger(Server.class); // TODO
 
 	public Server(int port) {
 		PORT = port;
@@ -20,26 +23,22 @@ public class Server {
 			serverSocket = new ServerSocket(PORT);
 			socketsController = new SocketsController(serverSocket, game);
 			socketsController.start();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			log.error(e);
 		}
 	}
 
 	public static void update() {
 		if (game.getPlayersToGo() <= 0 && game.started) {
 			game.play();
-			if (game.changed) {
-				socketsController.sendUpdatesToAllClients();
-			}
 		}
 		// Preparation state
 		if (game.getPlayersToGo() > 0) {
 			game.changeStatus("inRoom");
-			socketsController.sendUpdatesToAllClients();
-			while (!game.changed)
-				;
 		} else if (game.getPlayersToGo() <= 0 && !game.started) {
 			game.start();
 		}
+		socketsController.sendUpdatesToAllClients();
 	}
 }

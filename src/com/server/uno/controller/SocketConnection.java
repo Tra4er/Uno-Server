@@ -45,11 +45,12 @@ public class SocketConnection extends Thread {
 
 			if (jsonWorker.getRequestStatus().equals("newConnection")) {
 				player = new Player(createId(), jsonWorker.getPlayerName());
+				Server.log.warn("A connection with: " + player + " was established.");
 				jsonWorker.setPlayer(player);
 				game.addPlayer(player);
 				System.out.println("Created and added player: " + player);
 				printStream.println(jsonWorker.generateNewConnectionResponse());
-				printStream.flush();
+				printStream.flush(); // TODO mb i don't need this
 				System.out.println("Sent newConnection json");
 				startDialog();
 			} else if (jsonWorker.getRequestStatus().equals("reconnect")) {
@@ -60,13 +61,16 @@ public class SocketConnection extends Thread {
 						break;
 					}
 				}
+				Server.log.warn("A connection with: " + player + " was established.");
 				printStream.print("hello my old friend"); // TODO
 				startDialog();
 			} else {
 				printStream.print("helloError");
+				Server.log.error("Wrong Hello request with: " + player);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Server.log.error(e);
 			printStream.print("helloError");
 		} finally {
 			try {
@@ -74,21 +78,28 @@ public class SocketConnection extends Thread {
 				buffReader.close();
 				inStream.close();
 				socket.close();
+				Server.log.warn("A connection with: " + player + " was closed.");
 			} catch (Exception e) {
 				e.printStackTrace();
+				Server.log.error(e);
 			}
 		}
 	}
 
-	private void startDialog() throws Exception {
+	private void startDialog() {
 		System.out.println("Started dialog");
 		while (!socket.isClosed()) {
-			Server.update();
-			jsonWorker.parseToNewJson(buffReader.readLine());
-			System.out.println("Request: " + jsonWorker);
-			if (jsonWorker.getRequestStatus().equals("move"))
-				game.makeMove(player, jsonWorker.getMoverCard());
-			// TODO
+			try {
+				Server.update();
+				jsonWorker.parseToNewJson(buffReader.readLine());
+				System.out.println("Request: " + jsonWorker);
+				if (jsonWorker.getRequestStatus().equals("move"))
+					game.makeMove(player, jsonWorker.getMoverCard());
+				// TODO
+			} catch (Exception e) {
+				e.printStackTrace();
+				Server.log.error(e);
+			}
 		}
 	}
 
@@ -98,6 +109,7 @@ public class SocketConnection extends Thread {
 			System.out.println("Sent Updates: " + jsonWorker.generateGameData());
 		} catch (JSONException e) {
 			e.printStackTrace();
+			Server.log.error(e);
 		}
 	}
 

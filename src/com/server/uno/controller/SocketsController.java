@@ -31,6 +31,7 @@ public class SocketsController extends Thread {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			Server.log.error(e);
 		}
 	}
 	
@@ -38,6 +39,5 @@ public class SocketsController extends Thread {
 		for(SocketConnection conn : connections) {
 			conn.sendUpdate();
 		}
-		game.changed = false;
 	}
 }

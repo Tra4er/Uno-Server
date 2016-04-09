@@ -5,16 +5,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.server.uno.controller.Server;
+import com.server.uno.util.RulesManager;
 import com.server.uno.util.StepTimer;
 
 public class Game {
-
+	
 	public final int PLAYERS_NEEDED_TO_START = 2;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 
 	public volatile boolean started;
-	public volatile boolean changed;
 
 	private volatile String status = "inRoom";
 	private volatile Set<Player> players = new HashSet<>(); // Change visibility or meth with final
@@ -23,7 +24,7 @@ public class Game {
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
 	private GameTable table = new GameTable(); // Change visibility
 	
-//	public RulesManager rulesManager;
+	private RulesManager rulesManager; // TODO
 
 	public void start() {
 		changeStatus("inGame");
@@ -64,8 +65,8 @@ public class Game {
 			throw new IllegalArgumentException("Wrong game status: " + status);
 		if (status.equals("inGame"))
 			started = true;
-		changed = true;
 		this.status = status;
+		Server.log.info("Game status changed: " + status);
 	}
 
 	public List<String> getPlayersNames() {
@@ -83,7 +84,6 @@ public class Game {
 	public void addPlayer(Player player) {
 		players.add(player);
 		playersToGo--;
-		changed = true;
 	}
 
 	public Player getPlayerGoesNow() {
@@ -94,7 +94,6 @@ public class Game {
 		if (playerGoesNow == null)
 			throw new NullPointerException("Wrong playerGoesNow");
 		this.mover = playerGoesNow;
-		changed = true;
 	}
 
 	public int getPlayersToGo() {
@@ -105,7 +104,6 @@ public class Game {
 		if (playersToGo < 0)
 			throw new IllegalArgumentException("Wrong playersToGo number");
 		this.playersToGo = playersToGo;
-		changed = true;
 	}
 
 	public int getStepTime() {
