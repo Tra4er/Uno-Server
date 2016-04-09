@@ -1,6 +1,6 @@
 package com.server.uno.model;
 
-public class Card {
+public class Card implements Cloneable {
 
 	private volatile String color;
 	private volatile int number;
@@ -10,11 +10,6 @@ public class Card {
 		setNumber(number);
 	}
 	
-	public Card(Card card) {
-		color = card.color;
-		number = card.number;
-	}
-
 	public String getColor() {
 		return color;
 	}
@@ -35,9 +30,14 @@ public class Card {
 			throw new IllegalArgumentException("Wrong card number: " + number);
 		this.number = number;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Card [color=" + color + ", number=" + number + "]\n";
+	}
+	
+	@Override
+	public Card clone() throws CloneNotSupportedException {
+		return (Card) super.clone();
 	}
 }

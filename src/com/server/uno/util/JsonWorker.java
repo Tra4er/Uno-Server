@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.server.uno.controller.Server;
 import com.server.uno.model.Card;
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
@@ -32,9 +33,10 @@ public class JsonWorker {
 	public String getPlayerName() throws JSONException {
 		return request.getString("name");
 	}
-	
+
 	public Card getMoverCard() throws JSONException {
-		return (Card) request.get("card");
+		JSONObject temp = request.getJSONObject("card");
+		return new Card(temp.getString("color"), temp.getInt("value"));
 	}
 
 	public String generateNewConnectionResponse() throws JSONException {
@@ -46,41 +48,45 @@ public class JsonWorker {
 
 	public String generateGameData() throws JSONException {
 		response = new JSONObject();
-		
-		if (game.getStatus().equals("inGame")) { 
-			JSONObject data = new JSONObject();
-			data.put("state", "inGame");
-			JSONArray players = new JSONArray();
-			for(Player temp : game.getPlayers()) {
-				JSONObject playersJson = new JSONObject();
-				playersJson.put("name", temp.getName());
-				playersJson.put("cardsNumber", temp.getCards().size());
-				players.put(playersJson);
+		try {
+			if (game.getStatus().equals("inGame")) {
+				JSONObject data = new JSONObject();
+				data.put("state", "inGame");
+				JSONArray players = new JSONArray();
+				for (Player temp : game.getPlayers()) {
+					JSONObject playersJson = new JSONObject();
+					playersJson.put("name", temp.getName());
+					playersJson.put("cardsNumber", temp.getCards().size());
+					players.put(playersJson);
+				}
+				data.put("players", players);
+				JSONArray cards = new JSONArray();
+				for (Card card : player.getCards()) {
+					JSONObject cardsJson = new JSONObject();
+					cardsJson.put("color", card.getColor());
+					cardsJson.put("value", card.getNumber());
+					cards.put(cardsJson);
+				}
+				data.put("cards", cards);
+				data.put("currentPlayerName", player.getName());
+				data.put("topCard", game.getTable().getTopOpenCard());
+				data.put("timeToMoveEnd", game.getStepTime());
+				data.put("mover", game.getMover().getName());
+				response.put("response", data);
+				return response.toString();
 			}
-			data.put("players", players);
-			JSONArray cards = new JSONArray();
-			for(Card card : player.getCards()){
-				JSONObject cardsJson = new JSONObject();
-				cardsJson.put("color", card.getColor());
-				cardsJson.put("value", card.getNumber());
-				cards.put(cardsJson);
+			if (game.getStatus().equals("inRoom")) {
+				JSONObject data = new JSONObject();
+				data.put("players", game.getPlayersNames());
+				data.put("playersToGo", game.getPlayersToGo());
+				data.put("state", "inRoom");
+				response.put("response", data);
+				System.out.println(response);
+				return response.toString();
 			}
-			data.put("cards", cards);
-			data.put("currentPlayerName", player.getName());
-			data.put("topCard", game.getTable().getTopOpenCard());
-			data.put("timeToMoveEnd", game.getStepTime());
-			data.put("mover", game.getPlayerGoesNow().getName());
-			response.put("response", data);
-			return response.toString();
-		}
-		if (game.getStatus().equals("inRoom")) {
-			JSONObject data = new JSONObject();
-			data.put("players", game.getPlayersNames());
-			data.put("playersToGo", game.getPlayersToGo());
-			data.put("state", "inRoom");
-			response.put("response", data);
-			System.out.println(response);
-			return response.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Server.log.error(e);
 		}
 		System.out.println("Sent null");
 		return null;

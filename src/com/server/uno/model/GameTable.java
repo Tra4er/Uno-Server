@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 
-public class GameTable {
+public class GameTable implements Cloneable {
 
 	public static final int FULL_DECK = 108;
 
@@ -63,14 +63,23 @@ public class GameTable {
 		}
 
 	}
+	
+	public void openCard() {
+		topOpenCard = deck.pop();
+	}
 
-	public Card getTopOpenCard() {
-		return topOpenCard;
+	public Card getTopOpenCard() throws CloneNotSupportedException {
+		return topOpenCard.clone();
 	}
 
 	public void setTopOpenCard(Card topCard) {
 		if (topCard == null)
 			throw new NullPointerException("Wrong top card");
 		this.topOpenCard = topCard;
+	}
+	
+	@Override
+	public GameTable clone() throws CloneNotSupportedException {
+		return (GameTable) super.clone();
 	}
 }

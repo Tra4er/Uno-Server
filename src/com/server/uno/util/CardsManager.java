@@ -16,7 +16,7 @@ public class CardsManager {
 		this.game = game;
 	}
 
-	public void putCard(Player player, Card card) {
+	public void putCard(Player player, Card card) throws Exception {
 		if (player == null || card == null)
 			throw new IllegalArgumentException("Wrong player or card");
 

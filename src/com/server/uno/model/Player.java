@@ -3,7 +3,7 @@ package com.server.uno.model;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Player implements Comparable<Player> {
+public class Player implements Comparable<Player>, Cloneable {
 
 	private final static String STANDART_NAME = "Player";
 
@@ -65,6 +65,11 @@ public class Player implements Comparable<Player> {
 			return 0;
 		else
 			return 1;
+	}
+	
+	@Override
+	public Player clone() throws CloneNotSupportedException {
+		return (Player) super.clone();
 	}
 
 }

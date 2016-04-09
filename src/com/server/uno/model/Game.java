@@ -18,7 +18,7 @@ public class Game {
 	public volatile boolean started;
 
 	private volatile String status = "inRoom";
-	private volatile Set<Player> players = new HashSet<>(); // Change visibility or meth with final
+	private volatile Set<Player> players = new HashSet<>();
 	private Player mover;
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
@@ -29,7 +29,7 @@ public class Game {
 	public void start() {
 		changeStatus("inGame");
 		table.shuffleDeck();
-		boolean mover1 = true;
+		boolean mover1 = true; // TODO
 		for (Player player : players) {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
@@ -39,8 +39,10 @@ public class Game {
 				mover1 = false;
 			}
 		}
+		table.openCard();
 		timer.start();
 		started = true;
+		Server.update();
 	}
 
 	public void play() {
@@ -51,13 +53,13 @@ public class Game {
 		}
 	}
 	
-	public void makeMove(Player player, Card card) {
+	public void makeMove(Player player, Card card) { // TODO
 		mover = player;
-		changeStatus("move");
+//		changeStatus("move");
 	}
 
 	public String getStatus() {
-		return status;
+		return new String(status);
 	}
 
 	public void changeStatus(String status) {
@@ -78,22 +80,24 @@ public class Game {
 	}
 
 	public Set<Player> getPlayers() {
-		return players;
+		return new HashSet<Player>(players); // TODO Not sure if this is right
 	}
 
 	public void addPlayer(Player player) {
+		if(player == null) 
+			throw new NullPointerException("Wrong Player");
 		players.add(player);
 		playersToGo--;
 	}
 
-	public Player getPlayerGoesNow() {
-		return mover;
+	public Player getMover() throws CloneNotSupportedException {
+		return mover.clone();
 	}
 
-	public void setPlayerGoesNow(Player playerGoesNow) {
-		if (playerGoesNow == null)
-			throw new NullPointerException("Wrong playerGoesNow");
-		this.mover = playerGoesNow;
+	public void setMover(Player mover) {
+		if (mover == null)
+			throw new NullPointerException("Wrong Mover");
+		this.mover = mover;
 	}
 
 	public int getPlayersToGo() {
@@ -110,7 +114,7 @@ public class Game {
 		return timer.getTime();
 	}
 
-	public GameTable getTable() {
-		return table;
+	public GameTable getTable() throws CloneNotSupportedException {
+		return table.clone();
 	}
 }

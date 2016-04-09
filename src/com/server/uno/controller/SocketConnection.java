@@ -41,17 +41,14 @@ public class SocketConnection extends Thread {
 	public void run() {
 		try {
 			jsonWorker.parseToNewJson(buffReader.readLine());
-			System.out.println("First message: " + jsonWorker);
 
 			if (jsonWorker.getRequestStatus().equals("newConnection")) {
 				player = new Player(createId(), jsonWorker.getPlayerName());
 				Server.log.warn("A connection with: " + player + " was established.");
 				jsonWorker.setPlayer(player);
 				game.addPlayer(player);
-				System.out.println("Created and added player: " + player);
 				printStream.println(jsonWorker.generateNewConnectionResponse());
 				printStream.flush(); // TODO mb i don't need this
-				System.out.println("Sent newConnection json");
 				startDialog();
 			} else if (jsonWorker.getRequestStatus().equals("reconnect")) {
 				String reconnectedPlayerId = jsonWorker.getPlayer().id;
@@ -86,8 +83,7 @@ public class SocketConnection extends Thread {
 		}
 	}
 
-	private void startDialog() {
-		System.out.println("Started dialog");
+	private void startDialog() throws IOException, Exception {
 		while (!socket.isClosed()) {
 			try {
 				Server.update();
@@ -99,6 +95,8 @@ public class SocketConnection extends Thread {
 			} catch (Exception e) {
 				e.printStackTrace();
 				Server.log.error(e);
+				if(e.getMessage().equals("Connection reset"))
+					socket.close();
 			}
 		}
 	}
