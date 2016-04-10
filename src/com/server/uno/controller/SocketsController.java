@@ -24,7 +24,6 @@ public class SocketsController extends Thread {
 		try {
 			while (true) {
 				socket = serverSocket.accept();
-				System.out.println("Client accepted");
 				SocketConnection newConnection = new SocketConnection(socket, game);
 				connections.add(newConnection);
 				newConnection.start();

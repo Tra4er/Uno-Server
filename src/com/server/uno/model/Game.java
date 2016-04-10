@@ -29,14 +29,14 @@ public class Game {
 	public void start() {
 		changeStatus("inGame");
 		table.shuffleDeck();
-		boolean mover1 = true; // TODO
+		boolean isMover = true;
 		for (Player player : players) {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			if (mover1) { // Who first connected
+			if (isMover) { // Who first connected
 				mover = player;
-				mover1 = false;
+				isMover = false;
 			}
 		}
 		table.openCard();
@@ -55,6 +55,7 @@ public class Game {
 	
 	public void makeMove(Player player, Card card) { // TODO
 		mover = player;
+		mover.removeCard(card);
 //		changeStatus("move");
 	}
 
@@ -63,7 +64,7 @@ public class Game {
 	}
 
 	public void changeStatus(String status) {
-		if (!status.equals("inRoom") && !status.equals("inGame") && !status.equals("move"))
+		if (!status.equals("inRoom") && !status.equals("inGame"))
 			throw new IllegalArgumentException("Wrong game status: " + status);
 		if (status.equals("inGame"))
 			started = true;

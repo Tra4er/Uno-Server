@@ -69,27 +69,26 @@ public class JsonWorker {
 				}
 				data.put("cards", cards);
 				data.put("currentPlayerName", player.getName());
-				data.put("topCard", game.getTable().getTopOpenCard());
+				JSONObject topCard = new JSONObject();
+				topCard.put("color", game.getTable().getTopOpenCard().getColor());
+				topCard.put("value", game.getTable().getTopOpenCard().getNumber());
+				data.put("topCard", topCard);
 				data.put("timeToMoveEnd", game.getStepTime());
 				data.put("mover", game.getMover().getName());
 				response.put("response", data);
-				return response.toString();
-			}
-			if (game.getStatus().equals("inRoom")) {
+			} else if (game.getStatus().equals("inRoom")) {
 				JSONObject data = new JSONObject();
 				data.put("players", game.getPlayersNames());
 				data.put("playersToGo", game.getPlayersToGo());
 				data.put("state", "inRoom");
 				response.put("response", data);
-				System.out.println(response);
-				return response.toString();
+				Server.log.info(response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);
 		}
-		System.out.println("Sent null");
-		return null;
+		return response.toString();
 	}
 
 	public Player getPlayer() {

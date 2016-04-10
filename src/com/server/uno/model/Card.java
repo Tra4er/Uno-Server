@@ -9,7 +9,7 @@ public class Card implements Cloneable {
 		setColor(color);
 		setNumber(number);
 	}
-	
+
 	public String getColor() {
 		return color;
 	}
@@ -30,12 +30,21 @@ public class Card implements Cloneable {
 			throw new IllegalArgumentException("Wrong card number: " + number);
 		this.number = number;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Card [color=" + color + ", number=" + number + "]\n";
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		Card c = (Card) o;
+		if (color.equals(c.color) && number == c.number)
+			return true;
+		else
+			return false;
+	}
+
 	@Override
 	public Card clone() throws CloneNotSupportedException {
 		return (Card) super.clone();
