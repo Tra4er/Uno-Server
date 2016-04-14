@@ -10,8 +10,8 @@ import com.server.uno.util.RulesManager;
 import com.server.uno.util.StepTimer;
 
 public class Game {
-	
-	public final int PLAYERS_NEEDED_TO_START = 2;
+
+	public final int PLAYERS_NEEDED_TO_START = 1;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 
@@ -23,40 +23,46 @@ public class Game {
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
 	private GameTable table = new GameTable(); // Change visibility
-	
+
 	private RulesManager rulesManager; // TODO
 
 	public void start() {
 		changeStatus("inGame");
 		table.shuffleDeck();
-		boolean isMover = true;
+		boolean tempIsMover = true;
 		for (Player player : players) {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			if (isMover) { // Who first connected
+			if (tempIsMover) { // Who first connected
 				mover = player;
-				isMover = false;
+				tempIsMover = false;
 			}
 		}
 		table.openCard();
+		rulesManager = new RulesManager(this);
 		timer.start();
 		started = true;
 		Server.update();
 	}
 
-	public void play() {
-		// TODO with rulesManager
-		if(status.equals("move")) {
-//			mover.
-			timer.start();
-		}
-	}
-	
+//	public void play() {
+//		// TODO with rulesManager
+//		if (status.equals("move")) {
+//			// mover.
+//			timer.start();
+//		}
+//	}
+
 	public void makeMove(Player player, Card card) { // TODO
-		mover = player;
-		mover.removeCard(card);
-//		changeStatus("move");
+		try {
+			mover = player;
+			rulesManager.makeStep(mover, card); // TODO
+			timer.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Server.log.error(e);
+		}
 	}
 
 	public String getStatus() {
@@ -85,7 +91,7 @@ public class Game {
 	}
 
 	public void addPlayer(Player player) {
-		if(player == null) 
+		if (player == null)
 			throw new NullPointerException("Wrong Player");
 		players.add(player);
 		playersToGo--;

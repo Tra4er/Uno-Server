@@ -10,10 +10,12 @@ import com.server.uno.model.Player;
 public class CardsManager {
 
 	private Game game;
+	private RulesManager rulesManager;
 	private Deque<Card> bonusCards = new ArrayDeque<>();
 
-	public CardsManager(Game game) {
+	public CardsManager(Game game, RulesManager rulesManager) {
 		this.game = game;
+		this.rulesManager = rulesManager;
 	}
 
 	public void putCard(Player player, Card card) throws Exception {
@@ -43,13 +45,13 @@ public class CardsManager {
 			}
 				break;
 			case 12: {
-				bonusCards.add(game.getTable().getCardFromDeck());
-				bonusCards.add(game.getTable().getCardFromDeck());
+				rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
+				rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
 			}
 				break;
 			case 14: {
 				for (int i = 0; i < 4; i++) {
-					bonusCards.add(game.getTable().getCardFromDeck());
+					rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
 				}
 			}
 				break;
