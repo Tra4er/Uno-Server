@@ -68,14 +68,14 @@ public class GameTable implements Cloneable {
 		topOpenCard = deck.pop();
 	}
 
-	public Card getTopOpenCard() throws CloneNotSupportedException {
+	public Card getTopOpenCard() throws Exception {
 		return topOpenCard.clone();
 	}
 
 	public void setTopOpenCard(Card topCard) {
 		if (topCard == null)
 			throw new NullPointerException("Wrong top card");
-		this.topOpenCard = topCard;
+		topOpenCard = topCard;
 	}
 	
 	@Override

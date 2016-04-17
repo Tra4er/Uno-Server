@@ -29,7 +29,7 @@ public class Server {
 		}
 	}
 
-	public static void update() {
+	public static void update() throws Exception {
 		if (game.getPlayersToGo() <= 0 && game.started) {
 			// TODO
 		}

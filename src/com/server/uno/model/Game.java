@@ -11,7 +11,7 @@ import com.server.uno.util.StepTimer;
 
 public class Game {
 
-	public final int PLAYERS_NEEDED_TO_START = 1;
+	public final int PLAYERS_NEEDED_TO_START = 2;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 
@@ -21,11 +21,11 @@ public class Game {
 	private volatile Set<Player> players = new HashSet<>();
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
-	private GameTable table = new GameTable(); // Change visibility
+	private GameTable table = new GameTable();
 
-	private RulesManager rulesManager; // TODO
+	private RulesManager rulesManager;
 
-	public void start() {
+	public void start() throws Exception {
 		changeStatus("inGame");
 		table.shuffleDeck();
 		for (Player player : players) {
@@ -33,8 +33,8 @@ public class Game {
 				player.addCard(table.getCardFromDeck());
 			}
 		}
-		table.openCard();
 		rulesManager = new RulesManager(this);
+		rulesManager.makeFirstStep(table.getCardFromDeck());
 		timer.start();
 		started = true;
 		Server.update();
@@ -76,7 +76,7 @@ public class Game {
 	}
 
 	public Set<Player> getPlayers() {
-		return new HashSet<Player>(players); // TODO Not sure if this is right
+		return new HashSet<Player>(players);
 	}
 
 	public void addPlayer(Player player) {
@@ -113,4 +113,11 @@ public class Game {
 	public GameTable getTable() throws CloneNotSupportedException {
 		return table.clone();
 	}
+	
+	public void setTopOpenCard(Card topCard) { // TODO KOSTIL
+		if (topCard == null)
+			throw new NullPointerException("Wrong top card");
+		table.setTopOpenCard(topCard);
+	}
+	
 }

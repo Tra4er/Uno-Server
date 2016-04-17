@@ -18,12 +18,13 @@ public class CardsManager {
 		this.rulesManager = rulesManager;
 	}
 
-	public void putCard(Player player, Card card) throws Exception {
-		if (player == null || card == null)
+	public void putCard(Card card) throws Exception {
+		if (card == null)
 			throw new IllegalArgumentException("Wrong player or card");
+		
+		Player mover = rulesManager.getMover();
 
-//		if (RulesManager.checkStep(game, card)) {
-			switch (card.getNumber()) {
+		switch (card.getNumber()) {
 			case 0: {
 				// TODO
 			}
@@ -33,7 +34,7 @@ public class CardsManager {
 			}
 				break;
 			case 7: {
-				player.tamer = true;
+				mover.tamer = true;
 			}
 				break;
 			case 10: {
@@ -47,19 +48,18 @@ public class CardsManager {
 			case 12: {
 				rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
 				rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
+				rulesManager.isThereBonus = true;
 			}
 				break;
 			case 14: {
 				for (int i = 0; i < 4; i++) {
 					rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
 				}
+				rulesManager.isThereBonus = true;
 			}
 				break;
-//			}
-//			player.removeCard(card);
-//			game.getTable().setTopOpenCard(card);
-//			game.changed = true;
 		}
+		game.setTopOpenCard(card);
 	}
 
 	public Deque<Card> getBonusCards() {

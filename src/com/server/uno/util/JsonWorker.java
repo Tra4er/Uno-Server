@@ -71,14 +71,13 @@ public class JsonWorker {
 				}
 				data.put("cards", cards);
 				
-				data.put("position", player.getPlaceInDeque());
 				data.put("currentPlayerName", player.getName());
 				
 				JSONObject topCard = new JSONObject();
 				topCard.put("color", game.getTable().getTopOpenCard().getColor());
 				topCard.put("value", game.getTable().getTopOpenCard().getNumber());
-				
 				data.put("topCard", topCard);
+				
 				data.put("timeToMoveEnd", game.getStepTime());
 				data.put("mover", game.getMover().getName());
 				response.put("response", data);
