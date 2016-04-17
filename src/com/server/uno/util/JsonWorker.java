@@ -52,6 +52,7 @@ public class JsonWorker {
 			if (game.getStatus().equals("inGame")) {
 				JSONObject data = new JSONObject();
 				data.put("state", "inGame");
+				
 				JSONArray players = new JSONArray();
 				for (Player temp : game.getPlayers()) {
 					JSONObject playersJson = new JSONObject();
@@ -60,6 +61,7 @@ public class JsonWorker {
 					players.put(playersJson);
 				}
 				data.put("players", players);
+				
 				JSONArray cards = new JSONArray();
 				for (Card card : player.getCards()) {
 					JSONObject cardsJson = new JSONObject();
@@ -68,10 +70,14 @@ public class JsonWorker {
 					cards.put(cardsJson);
 				}
 				data.put("cards", cards);
+				
+				data.put("position", player.getPlaceInDeque());
 				data.put("currentPlayerName", player.getName());
+				
 				JSONObject topCard = new JSONObject();
 				topCard.put("color", game.getTable().getTopOpenCard().getColor());
 				topCard.put("value", game.getTable().getTopOpenCard().getNumber());
+				
 				data.put("topCard", topCard);
 				data.put("timeToMoveEnd", game.getStepTime());
 				data.put("mover", game.getMover().getName());

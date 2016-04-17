@@ -14,7 +14,7 @@ public class Server {
 	private static SocketsController socketsController;
 
 	private static Game game = new Game();
-	
+
 	public static Logger log = Logger.getLogger(Server.class); // TODO
 
 	public Server(int port) {
@@ -31,7 +31,7 @@ public class Server {
 
 	public static void update() {
 		if (game.getPlayersToGo() <= 0 && game.started) {
-			game.play();
+			// TODO
 		}
 		// Preparation state
 		if (game.getPlayersToGo() > 0) {

@@ -19,7 +19,6 @@ public class Game {
 
 	private volatile String status = "inRoom";
 	private volatile Set<Player> players = new HashSet<>();
-	private Player mover;
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
 	private GameTable table = new GameTable(); // Change visibility
@@ -29,14 +28,9 @@ public class Game {
 	public void start() {
 		changeStatus("inGame");
 		table.shuffleDeck();
-		boolean tempIsMover = true;
 		for (Player player : players) {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
-			}
-			if (tempIsMover) { // Who first connected
-				mover = player;
-				tempIsMover = false;
 			}
 		}
 		table.openCard();
@@ -47,18 +41,13 @@ public class Game {
 	}
 
 //	public void play() {
-//		// TODO with rulesManager
-//		if (status.equals("move")) {
-//			// mover.
-//			timer.start();
-//		}
+//		TODO, Mb.
 //	}
 
 	public void makeMove(Player player, Card card) { // TODO
 		try {
-			mover = player;
-			rulesManager.makeStep(mover, card); // TODO
-			timer.start();
+			rulesManager.makeStep(player, card);
+			timer.start();// TODO input in place where another player takes control 
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);
@@ -98,14 +87,14 @@ public class Game {
 	}
 
 	public Player getMover() throws CloneNotSupportedException {
-		return mover.clone();
+		return rulesManager.getMover();
 	}
 
-	public void setMover(Player mover) {
-		if (mover == null)
-			throw new NullPointerException("Wrong Mover");
-		this.mover = mover;
-	}
+//	public void setMover(Player mover) {
+//		if (mover == null)
+//			throw new NullPointerException("Wrong Mover");
+//		this.mover = mover;
+//	}
 
 	public int getPlayersToGo() {
 		return playersToGo;
