@@ -12,7 +12,7 @@ import com.server.uno.util.StepTimer;
 public class Game {
 
 	public final int PLAYERS_NEEDED_TO_START = 2;
-	public final int START_CARDS_NUMBER = 50;
+	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 
 	public volatile boolean started;
@@ -33,8 +33,7 @@ public class Game {
 			}
 		}
 		rulesManager = new RulesManager(this);
-//		rulesManager.makeFirstStep(table.getCardFromDeck());
-		rulesManager.makeFirstStep(new Card("black", 13));
+		rulesManager.makeFirstStep(table.getCardFromDeck());
 		timer.start();
 		started = true;
 		Server.update();

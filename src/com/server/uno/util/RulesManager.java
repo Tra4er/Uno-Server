@@ -25,18 +25,22 @@ public class RulesManager {
 		playersDeque = new ArrayList<>(game.getPlayers());
 		cardsManager = new CardsManager(game, this);
 		givePlayersDeque();
+		System.out.println(mover);
 	}
 
 	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
 																					// Multithreading
 
-		if (isRightCard(card)) {
-			mover = player;
-
-			cardsManager.putCard(card);
-			mover.removeCard(card);
-		} else { // Punishment
-			player.addCard(game.getTable().getCardFromDeck());
+		if (isRightCard(player, card)) {
+			if (!mover.equals(player) && game.getTable().getTopOpenCard().getNumber() == card.getNumber()) {
+				mover = player;
+				cardsManager.putCard(card);
+				mover.removeCard(card);
+			} else if (!mover.equals(player) && !(game.getTable().getTopOpenCard().getNumber() == card.getNumber())) {
+				punish(player);
+			}
+		} else {
+			punish(player);
 		}
 
 		if (isThereBonus) {
@@ -55,7 +59,6 @@ public class RulesManager {
 	public void makeFirstStep(Card card) throws Exception {
 		if (card.getColor().equals("black")) {
 			int color = (int) (Math.random() * 4);
-			System.out.println("************     " + color);
 			switch (color) {
 			case 0:
 				card.setColor("red");
@@ -74,11 +77,17 @@ public class RulesManager {
 		cardsManager.putCard(card);
 	}
 
-	private boolean isRightCard(Card card) throws Exception {
+	private boolean isRightCard(Player player, Card card) throws Exception {
 		Card topCard = game.getTable().getTopOpenCard();
-		if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()
-				|| card.getColor().equals("black")) {
-			return true;
+		if (player.isFirstMove) {
+			if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()
+					|| card.getColor().equals("black")) {
+				return true;
+			}
+		} else {
+			if (card.getColor().equals(topCard.getColor()) && card.getNumber() == topCard.getNumber()) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -96,6 +105,10 @@ public class RulesManager {
 			nextStepPlayer = playersDeque.get(0);
 		}
 		return nextStepPlayer;
+	}
+
+	private void punish(Player player) throws Exception {
+		player.addCard(game.getTable().getCardFromDeck());
 	}
 
 	private void givePlayersDeque() {

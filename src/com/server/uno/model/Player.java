@@ -12,6 +12,7 @@ public class Player implements Comparable<Player>, Cloneable {
 	private volatile List<Card> cards = new LinkedList<>();
 	private volatile int placeInDeque;
 	
+	public volatile boolean isFirstMove = true;;
 	public volatile boolean tamer; // TODO 
 	
 	public Player(String id) {
