@@ -1,9 +1,6 @@
 package com.server.uno.util;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.Iterator;
 import java.util.List;
 
 import com.server.uno.model.Card;
@@ -16,7 +13,6 @@ public class RulesManager {
 	private Player mover;
 	private List<Player> playersDeque; // TODO
 	private CardsManager cardsManager;
-	private Deque<Card> cardsPool = new ArrayDeque<>();
 
 	public boolean isThereBonus;
 
@@ -31,29 +27,51 @@ public class RulesManager {
 	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
 																					// Multithreading
 
-		if (isRightCard(player, card)) {
+		if (isRightCard(card)) {
 			if (!mover.equals(player) && game.getTable().getTopOpenCard().getNumber() == card.getNumber()) {
 				mover = player;
-				cardsManager.putCard(card);
-				mover.removeCard(card);
 			} else if (!mover.equals(player) && !(game.getTable().getTopOpenCard().getNumber() == card.getNumber())) {
 				punish(player);
+			}
+
+			if (!mover.isFirstMove) {
+				if (!isRightSecondStep(card)) {
+					punish(player);
+				}
+			} else {
+				cardsManager.putCard(card);
+				mover.removeCard(card);
 			}
 		} else {
 			punish(player);
 		}
 
 		if (isThereBonus) {
-			if (!cardsPool.isEmpty()) {
+			if (!cardsManager.getCardsPool().isEmpty()) {
 				int i = 0;
-				while (i < cardsPool.size()) {
-					getNextStepPlayer().addCard(cardsPool.pop());
+				while (i < cardsManager.getCardsPool().size()) {
+					getNextStepPlayer().addCard(cardsManager.popFromCardsPool());
 				}
 			}
-			// if() TODO
 			isThereBonus = false;
 		}
-		// TODO
+		if (!isStepsAvailable()) {
+			System.err.println("MOVER CHANGED");
+			mover = getNextStepPlayer();
+		}
+	}
+
+	private boolean isRightCard(Card card) throws Exception {
+		Card topCard = game.getTable().getTopOpenCard();
+		if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()
+				|| card.getColor().equals("black")) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isRightSecondStep(Card card) throws Exception {
+		return card.getNumber() == game.getTable().getTopOpenCard().getNumber();
 	}
 
 	public void makeFirstStep(Card card) throws Exception {
@@ -77,27 +95,11 @@ public class RulesManager {
 		cardsManager.putCard(card);
 	}
 
-	private boolean isRightCard(Player player, Card card) throws Exception {
-		Card topCard = game.getTable().getTopOpenCard();
-		if (player.isFirstMove) {
-			if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()
-					|| card.getColor().equals("black")) {
-				return true;
-			}
-		} else {
-			if (card.getColor().equals(topCard.getColor()) && card.getNumber() == topCard.getNumber()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private Player getNextStepPlayer() throws Exception {
 		if (mover.getPlaceInDeque() > playersDeque.size())
 			throw new Exception("Wrong player position");
 
 		Player nextStepPlayer = null;
-		System.out.println("Looking for next player");
 
 		if (mover.getPlaceInDeque() < playersDeque.size() - 1) {
 			nextStepPlayer = playersDeque.get(mover.getPlaceInDeque() + 1);
@@ -105,6 +107,15 @@ public class RulesManager {
 			nextStepPlayer = playersDeque.get(0);
 		}
 		return nextStepPlayer;
+	}
+
+	private boolean isStepsAvailable() throws Exception {
+		for (Card card : mover.getCards()) {
+			if (card.getNumber() == game.getTable().getTopOpenCard().getNumber()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void punish(Player player) throws Exception {
@@ -116,14 +127,6 @@ public class RulesManager {
 		for (int i = 0; i < playersDeque.size(); i++) {
 			playersDeque.get(i).setPlaceInDeque(i);
 		}
-	}
-
-	public List<Card> getCardsPool() {
-		return new ArrayList<>(cardsPool);
-	}
-
-	public void addCardInToPool(Card card) {
-		cardsPool.push(card);
 	}
 
 	public Player getMover() throws CloneNotSupportedException {

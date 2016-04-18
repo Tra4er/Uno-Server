@@ -46,7 +46,6 @@ public class Game {
 	public void makeMove(Player player, Card card) { // TODO
 		try {
 			rulesManager.makeStep(player, card);
-			timer.start();// TODO input in place where another player takes control 
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);
@@ -89,12 +88,6 @@ public class Game {
 		return rulesManager.getMover();
 	}
 
-//	public void setMover(Player mover) {
-//		if (mover == null)
-//			throw new NullPointerException("Wrong Mover");
-//		this.mover = mover;
-//	}
-
 	public int getPlayersToGo() {
 		return playersToGo;
 	}
@@ -113,7 +106,7 @@ public class Game {
 		return table.clone();
 	}
 	
-	public void setTopOpenCard(Card topCard) { // TODO KOSTIL
+	public void setTopOpenCard(Card topCard) { // TODO Valve
 		if (topCard == null)
 			throw new NullPointerException("Wrong top card");
 		table.setTopOpenCard(topCard);

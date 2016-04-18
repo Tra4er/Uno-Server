@@ -25,6 +25,8 @@ public class StepTimer {
 					time--;
 			}
 		}, 0, 1000);
+		// mover = nextPayer()
+		// timer.restart()
 	}
 	
 	public int getTime() {

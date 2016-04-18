@@ -47,7 +47,7 @@ public class Player implements Comparable<Player>, Cloneable {
 	}
 
 	public List<Card> getCards() {
-		return cards;
+		return new LinkedList<Card>(cards);
 	}
 	
 	public void setCards(List<Card> cards) {

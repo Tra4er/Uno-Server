@@ -11,7 +11,7 @@ public class CardsManager {
 
 	private Game game;
 	private RulesManager rulesManager;
-	private Deque<Card> bonusCards = new ArrayDeque<>();
+	private Deque<Card> cardsPool = new ArrayDeque<>();
 
 	public CardsManager(Game game, RulesManager rulesManager) {
 		this.game = game;
@@ -46,14 +46,14 @@ public class CardsManager {
 			}
 				break;
 			case 12: {
-				rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
-				rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
+				cardsPool.push(game.getTable().getCardFromDeck());
+				cardsPool.push(game.getTable().getCardFromDeck());
 				rulesManager.isThereBonus = true;
 			}
 				break;
 			case 14: {
 				for (int i = 0; i < 4; i++) {
-					rulesManager.addCardInToPool(game.getTable().getCardFromDeck());
+					cardsPool.push(game.getTable().getCardFromDeck());
 				}
 				rulesManager.isThereBonus = true;
 			}
@@ -66,5 +66,13 @@ public class CardsManager {
 	public Deque<Card> getBonusCards() {
 		// TODO with removing cards from list(Deque)
 		return null;
+	}
+
+	public Deque<Card> getCardsPool() {
+		return new ArrayDeque<Card>(cardsPool);
+	}
+	
+	public Card popFromCardsPool() {
+		return cardsPool.pop();
 	}
 }

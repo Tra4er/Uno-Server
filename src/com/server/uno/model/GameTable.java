@@ -23,7 +23,6 @@ public class GameTable implements Cloneable {
 				return null;
 			shuffleDiscardPile();
 		}
-		System.err.println(deck.size());
 		return deck.pop();
 	}
 

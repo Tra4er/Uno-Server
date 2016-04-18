@@ -15,7 +15,7 @@ public class Server {
 
 	private static Game game = new Game();
 
-	public static Logger log = Logger.getLogger(Server.class); // TODO
+	public static Logger log = Logger.getLogger(Server.class);
 
 	public Server(int port) {
 		PORT = port;
