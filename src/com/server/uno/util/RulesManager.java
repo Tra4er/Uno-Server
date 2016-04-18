@@ -27,21 +27,22 @@ public class RulesManager {
 		givePlayersDeque();
 	}
 
-	public void makeStep(Player player, Card card) throws Exception { // TODO Multithreading
+	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
+																					// Multithreading
 
 		if (isRightCard(card)) {
 			mover = player;
 
 			cardsManager.putCard(card);
 			mover.removeCard(card);
-		} else { // Punishment 
+		} else { // Punishment
 			player.addCard(game.getTable().getCardFromDeck());
 		}
 
 		if (isThereBonus) {
 			if (!cardsPool.isEmpty()) {
-				Iterator<Card> iterator = cardsPool.iterator();
-				while(iterator.hasNext()) {
+				int i = 0;
+				while (i < cardsPool.size()) {
 					getNextStepPlayer().addCard(cardsPool.pop());
 				}
 			}
@@ -52,9 +53,27 @@ public class RulesManager {
 	}
 
 	public void makeFirstStep(Card card) throws Exception {
+		if (card.getColor().equals("black")) {
+			int color = (int) (Math.random() * 4);
+			System.out.println("************     " + color);
+			switch (color) {
+			case 0:
+				card.setColor("red");
+				break;
+			case 1:
+				card.setColor("yellow");
+				break;
+			case 2:
+				card.setColor("green");
+				break;
+			case 3:
+				card.setColor("blue");
+				break;
+			}
+		}
 		cardsManager.putCard(card);
 	}
-	
+
 	private boolean isRightCard(Card card) throws Exception {
 		Card topCard = game.getTable().getTopOpenCard();
 		if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()

@@ -9,40 +9,22 @@ public class GameTable implements Cloneable {
 
 	public static final int FULL_DECK = 108;
 
-	private volatile int cardsInDeck = FULL_DECK;
 	private volatile Deque<Card> deck = new ArrayDeque<>(FULL_DECK);
 	private volatile Card topOpenCard;
+	private volatile ArrayList<Card> discardPile = new ArrayList<>();
 
 	public GameTable() {
 		generateDeck();
 	}
 
-	/**
-	 * @return Returns number of cards in deck. Count starts from 0.
-	 */
-	public int getNumberOfCardsInDeck() {
-		return cardsInDeck;
-	}
-
 	public Card getCardFromDeck() {
-		cardsInDeck--;
+		if (deck.size() == 0) {
+			if(discardPile.size() == 0)
+				return null;
+			shuffleDiscardPile();
+		}
+		System.err.println(deck.size());
 		return deck.pop();
-	}
-
-	public void shuffleDeck() {
-		ArrayList<Card> temp = new ArrayList<>(deck);
-		Collections.shuffle(temp);
-		deck = new ArrayDeque<>(temp);
-	}
-
-	public Deque<Card> getDeck() {
-		return deck;
-	}
-
-	public void setDeck(Deque<Card> deck) {
-		if (deck == null)
-			throw new NullPointerException("Wrong cards array");
-		this.deck = deck;
 	}
 
 	public void generateDeck() {
@@ -61,11 +43,23 @@ public class GameTable implements Cloneable {
 				}
 			}
 		}
-
+		shuffleNewDeck();
 	}
-	
-	public void openCard() {
-		topOpenCard = deck.pop();
+
+	private void shuffleNewDeck() {
+		ArrayList<Card> temp = new ArrayList<>(deck);
+		Collections.shuffle(temp);
+		deck = new ArrayDeque<>(temp);
+	}
+
+	private void shuffleDiscardPile() {
+		Collections.shuffle(discardPile);
+		System.out.println(discardPile);
+		deck = new ArrayDeque<>(discardPile);
+	}
+
+	public Deque<Card> getDeck() {
+		return new ArrayDeque<Card>(deck);
 	}
 
 	public Card getTopOpenCard() throws Exception {
@@ -75,9 +69,11 @@ public class GameTable implements Cloneable {
 	public void setTopOpenCard(Card topCard) {
 		if (topCard == null)
 			throw new NullPointerException("Wrong top card");
+
+		discardPile.add(topOpenCard);
 		topOpenCard = topCard;
 	}
-	
+
 	@Override
 	public GameTable clone() throws CloneNotSupportedException {
 		return (GameTable) super.clone();

@@ -25,7 +25,7 @@ public class Player implements Comparable<Player>, Cloneable {
 	
 	public void addCard(Card card) {
 		if(card == null) 
-			throw new NullPointerException("Wrong card");
+			return;
 		cards.add(card);
 	}
 	
