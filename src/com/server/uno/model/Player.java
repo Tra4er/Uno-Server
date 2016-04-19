@@ -56,10 +56,10 @@ public class Player implements Comparable<Player>, Cloneable {
 		this.cards = cards;
 	}
 	
-	@Override
-	public String toString() {
-		return "Player [id=" + id + ", name=" + name + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "Player [id=" + id + ", name=" + name + "]";
+//	}
 
 	@Override
 	public int compareTo(Player p2) {

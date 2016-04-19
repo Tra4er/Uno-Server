@@ -21,7 +21,6 @@ public class RulesManager {
 		playersDeque = new ArrayList<>(game.getPlayers());
 		cardsManager = new CardsManager(game, this);
 		givePlayersDeque();
-		System.out.println(mover);
 	}
 
 	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
@@ -32,17 +31,20 @@ public class RulesManager {
 				mover = player;
 			} else if (!mover.equals(player) && !(game.getTable().getTopOpenCard().getNumber() == card.getNumber())) {
 				punish(player);
-			}
-
-			if(mover.isFirstMove) {
-				cardsManager.putCard(card);
-				mover.removeCard(card);
 			} else {
-				if(isRightSecondStep(card)) {
+				System.err.println(mover.isFirstMove);
+				if (mover.isFirstMove) {
+					System.err.println("Puting first time");
 					cardsManager.putCard(card);
 					mover.removeCard(card);
 				} else {
-					punish(player);
+					if (isRightSecondStep(card)) {
+						System.err.println("Puting second time");
+						cardsManager.putCard(card);
+						mover.removeCard(card);
+					} else {
+						punish(player);
+					}
 				}
 			}
 		} else {
@@ -59,7 +61,6 @@ public class RulesManager {
 			isThereBonus = false;
 		}
 		if (!isStepsAvailable()) {
-			System.err.println("MOVER CHANGED");
 			mover = getNextStepPlayer();
 		}
 	}
@@ -70,13 +71,11 @@ public class RulesManager {
 				|| card.getNumber() > 12) {
 			return true;
 		}
-		if (card.getColor().equals("black"))
-			return true; // TODO remove
 		return false;
 	}
 
 	private boolean isRightSecondStep(Card card) throws Exception {
-		return card.getNumber() == game.getTable().getTopOpenCard().getNumber();
+		return card.getNumber() == game.getTable().getTopOpenCard().getNumber() /*|| card.getColor().equals(game.getTable().getTopOpenCard().getColor())*/;
 	}
 
 	public void makeFirstStep(Card card) throws Exception {
@@ -135,7 +134,7 @@ public class RulesManager {
 	}
 
 	public Player getMover() throws CloneNotSupportedException {
-		return mover.clone();
+		return mover;
 	}
 
 	public void setMover(Player mover) {
