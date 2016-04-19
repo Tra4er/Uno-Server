@@ -7,12 +7,17 @@ import java.util.ArrayList;
 import com.server.uno.model.Game;
 
 public class SocketsController extends Thread {
+	
+	public static final int CONNECTIONS_NUMBER = 2;
 
 	private Socket socket;
 	private ServerSocket serverSocket;
 	private Game game;
 
-	private volatile ArrayList<SocketConnection> connections = new ArrayList<>();
+	private volatile ArrayList<SocketConnection> connections = new ArrayList<>(); // TODO With some locker 
+//	private AtomicReferenceArray<SocketConnection> connections = new AtomicReferenceArray<>(CONNECTIONS_NUMBER);
+//	private BlockingQueue connections = new BlockingQueue<E>() {
+//	};
 
 	public SocketsController(ServerSocket serverSocket, Game game) {
 		this.serverSocket = serverSocket;
@@ -34,7 +39,7 @@ public class SocketsController extends Thread {
 		}
 	}
 	
-	public void sendUpdatesToAllClients() {
+	public synchronized void sendUpdatesToAllClients() {
 		for(SocketConnection conn : connections) {
 			conn.sendUpdate();
 		}

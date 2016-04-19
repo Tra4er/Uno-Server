@@ -27,19 +27,24 @@ public class RulesManager {
 																					// Multithreading
 
 		if (isRightCard(card)) {
-			if (!mover.equals(player) && game.getTable().getTopOpenCard().getNumber() == card.getNumber()) {
+			// Checking if player is mover
+			if (!mover.equals(player) && game.getTable().getTopOpenCard().getNumber() == card.getNumber() 
+					&& game.getTable().getTopOpenCard().getColor().equals(card.getColor())) {
 				mover = player;
-			} else if (!mover.equals(player) && !(game.getTable().getTopOpenCard().getNumber() == card.getNumber())) {
+			}
+			// If he is not mover punish him
+			else if (!mover.equals(player) && (!(game.getTable().getTopOpenCard().getNumber() == card.getNumber())
+					|| !(game.getTable().getTopOpenCard().getColor().equals(card.getColor())))) {
 				punish(player);
-			} else {
-				System.err.println(mover.isFirstMove);
+			}
+			// Making move if he is mover
+			else if (mover.equals(player)){
 				if (mover.isFirstMove) {
-					System.err.println("Puting first time");
 					cardsManager.putCard(card);
 					mover.removeCard(card);
-				} else {
+					mover.isFirstMove = false;
+				} else if (!mover.isFirstMove) {
 					if (isRightSecondStep(card)) {
-						System.err.println("Puting second time");
 						cardsManager.putCard(card);
 						mover.removeCard(card);
 					} else {
@@ -60,7 +65,9 @@ public class RulesManager {
 			}
 			isThereBonus = false;
 		}
-		if (!isStepsAvailable()) {
+		if (mover.equals(player) && !mover.isFirstMove && !isStepsAvailable()) {
+			System.err.println("No more steps");
+			mover.isFirstMove = true;
 			mover = getNextStepPlayer();
 		}
 	}
@@ -75,10 +82,10 @@ public class RulesManager {
 	}
 
 	private boolean isRightSecondStep(Card card) throws Exception {
-		return card.getNumber() == game.getTable().getTopOpenCard().getNumber() /*|| card.getColor().equals(game.getTable().getTopOpenCard().getColor())*/;
+		return card.getNumber() == game.getTable().getTopOpenCard().getNumber();
 	}
 
-	public void makeFirstStep(Card card) throws Exception {
+	public void makeFirstStep(Player player, Card card) throws Exception {
 		if (card.getColor().equals("black")) {
 			int color = (int) (Math.random() * 4);
 			switch (color) {
@@ -96,7 +103,20 @@ public class RulesManager {
 				break;
 			}
 		}
+		
+		mover = player;
 		cardsManager.putCard(card);
+		mover = playersDeque.get(0);
+		
+		if (isThereBonus) {
+			if (!cardsManager.getCardsPool().isEmpty()) {
+				int i = 0;
+				while (i < cardsManager.getCardsPool().size()) {
+					mover.addCard(cardsManager.popFromCardsPool());
+				}
+			}
+			isThereBonus = false;
+		}
 	}
 
 	private Player getNextStepPlayer() throws Exception {
@@ -127,7 +147,6 @@ public class RulesManager {
 	}
 
 	private void givePlayersDeque() {
-		mover = playersDeque.get(0);
 		for (int i = 0; i < playersDeque.size(); i++) {
 			playersDeque.get(i).setPlaceInDeque(i);
 		}

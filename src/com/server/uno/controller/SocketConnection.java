@@ -47,7 +47,7 @@ public class SocketConnection extends Thread {
 				Server.log.warn("A connection with: " + player + " was established.");
 				jsonWorker.setPlayer(player);
 				game.addPlayer(player);
-				printStream.println(jsonWorker.generateNewConnectionResponse());
+				printStream.print(jsonWorker.generateNewConnectionResponse());
 				startDialog();
 			} else if (jsonWorker.getRequestStatus().equals("reconnect")) {
 				String reconnectedPlayerId = jsonWorker.getPlayer().id;
@@ -105,7 +105,7 @@ public class SocketConnection extends Thread {
 
 	public synchronized void sendUpdate() {
 		try {
-			printStream.println(jsonWorker.generateGameData());
+			printStream.print(jsonWorker.generateGameData());
 			Server.log.info("Sent Updates: " + jsonWorker.generateGameData());
 		} catch (JSONException e) {
 			e.printStackTrace();

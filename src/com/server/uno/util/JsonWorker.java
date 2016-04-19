@@ -20,33 +20,33 @@ public class JsonWorker {
 		this.game = game;
 	}
 
-	public void parseToNewJson(String json) throws Exception {
+	public synchronized void parseToNewJson(String json) throws Exception {
 		if (json == null)
 			throw new NullPointerException("Wrong json");
 		request = new JSONObject(json);
 	}
 
-	public String getRequestStatus() throws JSONException {
+	public synchronized String getRequestStatus() throws JSONException {
 		return request.getString("request");
 	}
 
-	public String getPlayerName() throws JSONException {
+	public synchronized String getPlayerName() throws JSONException {
 		return request.getString("name");
 	}
 
-	public Card getMoverCard() throws JSONException {
+	public synchronized Card getMoverCard() throws JSONException {
 		JSONObject temp = request.getJSONObject("card");
 		return new Card(temp.getString("color"), temp.getInt("value"));
 	}
 
-	public String generateNewConnectionResponse() throws JSONException {
+	public synchronized String generateNewConnectionResponse() throws JSONException {
 		response = new JSONObject();
 		response.put("response", "connectionAcquired");
 		response.put("id", player.id);
 		return response.toString();
 	}
 
-	public String generateGameData() throws JSONException {
+	public synchronized String generateGameData() throws JSONException {
 		response = new JSONObject();
 		try {
 			if (game.getStatus().equals("inGame")) {
@@ -96,11 +96,11 @@ public class JsonWorker {
 		return response.toString();
 	}
 
-	public Player getPlayer() {
+	public synchronized Player getPlayer() {
 		return player;
 	}
 
-	public void setPlayer(Player player) {
+	public synchronized void setPlayer(Player player) {
 		if (player == null)
 			throw new NullPointerException("Wrong player");
 		this.player = player;

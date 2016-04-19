@@ -33,8 +33,8 @@ public class Game {
 			}
 		}
 		rulesManager = new RulesManager(this);
-		rulesManager.makeFirstStep(table.getCardFromDeck());
-//		rulesManager.makeFirstStep(new Card("black", 14));
+		rulesManager.makeFirstStep(new Player("001", "admin"), table.getCardFromDeck());
+//		rulesManager.makeFirstStep(new Player("001", "admin"), new Card("black", 14));
 		timer.start();
 		started = true;
 		Server.update();
@@ -54,7 +54,7 @@ public class Game {
 	}
 	
 	public void giveCard(Player player) throws Exception {
-		if(player.equals(getMover()))
+		if(!player.equals(getMover()))
 			return;
 		
 		player.addCard(table.getCardFromDeck());

@@ -59,7 +59,6 @@ public class CardsManager {
 			}
 				break;
 		}
-		mover.isFirstMove = false;
 		game.setTopOpenCard(card);
 	}
 
