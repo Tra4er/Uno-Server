@@ -34,6 +34,7 @@ public class Game {
 		}
 		rulesManager = new RulesManager(this);
 		rulesManager.makeFirstStep(table.getCardFromDeck());
+//		rulesManager.makeFirstStep(new Card("black", 14));
 		timer.start();
 		started = true;
 		Server.update();
@@ -50,6 +51,13 @@ public class Game {
 			e.printStackTrace();
 			Server.log.error(e);
 		}
+	}
+	
+	public void giveCard(Player player) throws Exception {
+		if(player.equals(getMover()))
+			return;
+		
+		player.addCard(table.getCardFromDeck());
 	}
 
 	public String getStatus() {

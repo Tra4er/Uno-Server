@@ -34,13 +34,16 @@ public class RulesManager {
 				punish(player);
 			}
 
-			if (!mover.isFirstMove) {
-				if (!isRightSecondStep(card)) {
-					punish(player);
-				}
-			} else {
+			if(mover.isFirstMove) {
 				cardsManager.putCard(card);
 				mover.removeCard(card);
+			} else {
+				if(isRightSecondStep(card)) {
+					cardsManager.putCard(card);
+					mover.removeCard(card);
+				} else {
+					punish(player);
+				}
 			}
 		} else {
 			punish(player);
@@ -64,9 +67,11 @@ public class RulesManager {
 	private boolean isRightCard(Card card) throws Exception {
 		Card topCard = game.getTable().getTopOpenCard();
 		if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()
-				|| card.getColor().equals("black")) {
+				|| card.getNumber() > 12) {
 			return true;
 		}
+		if (card.getColor().equals("black"))
+			return true; // TODO remove
 		return false;
 	}
 
