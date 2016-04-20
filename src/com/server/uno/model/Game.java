@@ -33,7 +33,7 @@ public class Game {
 			}
 		}
 		rulesManager = new RulesManager(this);
-		rulesManager.makeFirstStep(new Player(Player.STANDART_ID, Player.STANDART_NAME), table.getCardFromDeck());
+		rulesManager.getStepManager().makeFirstStep(new Player(Player.STANDART_ID, Player.STANDART_NAME), table.getCardFromDeck());
 //		rulesManager.makeFirstStep(new Player("001", "admin"), new Card("black", 14));
 		timer.start();
 		started = true;

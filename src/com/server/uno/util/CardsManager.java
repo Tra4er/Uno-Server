@@ -12,7 +12,7 @@ public class CardsManager {
 	private Game game;
 	private RulesManager rulesManager;
 	private Deque<Card> cardsPool = new ArrayDeque<>();
-	private Player nextMover = new Player(Player.STANDART_ID);
+	private Player nextMover;
 
 	public CardsManager(Game game, RulesManager rulesManager) {
 		this.game = game;
@@ -21,44 +21,45 @@ public class CardsManager {
 
 	public void putCard(Card card) throws Exception {
 		if (card == null)
-			throw new IllegalArgumentException("Wrong player or card");
-		
+			throw new IllegalArgumentException("Wrong card");
 
+		int gaps = 0;
+		
 		switch (card.getNumber()) {
-			case 0: {
-				// TODO
-			}
-				break;
-			case 5: {
-				// TODO
-			}
-				break;
-			case 7: {
-				//TODO
-			}
-				break;
-			case 10: {
-				nextMover = rulesManager.missNeedlessPlayerAndGetNextMover();
-				rulesManager.isThereBonus = true;
-			}
-				break;
-			case 11: {
-				// TODO
-			}
-				break;
-			case 12: {
+		case 0: {
+			// TODO
+		}
+			break;
+		case 5: {
+			// TODO
+		}
+			break;
+		case 7: {
+			// TODO
+		}
+			break;
+		case 10: {
+			nextMover = rulesManager.getNextStepPlayer(true);
+			rulesManager.isGap = true;
+		}
+			break;
+		case 11: {
+			rulesManager.isReverse = true;
+		}
+			break;
+		case 12: {
+			cardsPool.push(game.getTable().getCardFromDeck());
+			cardsPool.push(game.getTable().getCardFromDeck());
+			rulesManager.isThereBonusCards = true;
+		}
+			break;
+		case 14: {
+			for (int i = 0; i < 4; i++) {
 				cardsPool.push(game.getTable().getCardFromDeck());
-				cardsPool.push(game.getTable().getCardFromDeck());
-				rulesManager.isThereBonus = true;
 			}
-				break;
-			case 14: {
-				for (int i = 0; i < 4; i++) {
-					cardsPool.push(game.getTable().getCardFromDeck());
-				}
-				rulesManager.isThereBonus = true;
-			}
-				break;
+			rulesManager.isThereBonusCards = true;
+		}
+			break;
 		}
 		game.setTopOpenCard(card);
 	}
@@ -71,12 +72,14 @@ public class CardsManager {
 	public Deque<Card> getCardsPool() {
 		return new ArrayDeque<Card>(cardsPool);
 	}
-	
+
 	public Card popFromCardsPool() {
 		return cardsPool.pop();
 	}
 
 	public Player getNextMover() {
-		return nextMover;
+		Player temp = nextMover;
+		nextMover = null;
+		return temp;
 	}
 }

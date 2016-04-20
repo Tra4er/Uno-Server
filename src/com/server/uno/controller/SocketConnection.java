@@ -87,7 +87,7 @@ public class SocketConnection extends Thread {
 			try {
 				Server.update();
 				jsonWorker.parseToNewJson(buffReader.readLine());
-				Server.log.info("Request: " + jsonWorker);
+				Server.log.info("Request from " + player + ": " + jsonWorker);
 				if (jsonWorker.getRequestStatus().equals("move"))
 					game.makeMove(player, jsonWorker.getMoverCard());
 				if (jsonWorker.getRequestStatus().equals("getCard"))

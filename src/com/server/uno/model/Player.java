@@ -64,10 +64,10 @@ public class Player implements Comparable<Player>, Cloneable {
 		this.cards = cards;
 	}
 	
-//	@Override
-//	public String toString() {
-//		return "Player [id=" + id + ", name=" + name + "]";
-//	}
+	@Override
+	public String toString() {
+		return "Player [id=" + id + ", name=" + name + "]";
+	}
 
 	@Override
 	public int compareTo(Player p2) {
@@ -82,6 +82,10 @@ public class Player implements Comparable<Player>, Cloneable {
 		return (Player) super.clone();
 	}
 
+	/**
+	 * 
+	 * @return position starting from 0
+	 */
 	public int getPlaceInDeque() {
 		return placeInDeque;
 	}
