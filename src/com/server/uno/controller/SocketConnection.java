@@ -44,7 +44,7 @@ public class SocketConnection extends Thread {
 
 			if (jsonWorker.getRequestStatus().equals("newConnection")) {
 				player = new Player(createId(), jsonWorker.getPlayerName());
-				Server.log.warn("A connection with: " + player + " was established.");
+				Server.log.warn("A CONNECTION with: " + player + " was established.");
 				jsonWorker.setPlayer(player);
 				game.addPlayer(player);
 				printStream.print(jsonWorker.generateNewConnectionResponse());
@@ -57,7 +57,7 @@ public class SocketConnection extends Thread {
 						break;
 					}
 				}
-				Server.log.warn("A connection with: " + player + " was established.");
+				Server.log.warn("A CONNECTION with: " + player + " was established.");
 				printStream.print("hello my old friend"); // TODO
 				startDialog();
 			} else {
@@ -74,7 +74,7 @@ public class SocketConnection extends Thread {
 				buffReader.close();
 				inStream.close();
 				socket.close();
-				Server.log.warn("A connection with: " + player + " was closed.");
+				Server.log.warn("A CONNECTION with: " + player + " was closed.");
 			} catch (Exception e) {
 				e.printStackTrace();
 				Server.log.error(e);
@@ -92,13 +92,20 @@ public class SocketConnection extends Thread {
 					game.makeMove(player, jsonWorker.getMoverCard());
 				if (jsonWorker.getRequestStatus().equals("getCard"))
 					game.giveCard(player);
+				if (jsonWorker.getRequestStatus().equals("closeConnection")) {
+					socket.close();
+					Server.log.warn(player + " is closing SOCKET.");
+				}
 				// TODO
 			} catch (Exception e) {
-				e.printStackTrace();
-				Server.log.error(e);
 				if (e.getMessage().equals("Connection reset")) {
 					socket.close();
+					Server.log.warn("Unexpected SOCKET closing with: " + player + ".");
 				} // TODO Remove player from set
+				else {
+					e.printStackTrace();
+					Server.log.error(e);
+				}
 			}
 		}
 	}

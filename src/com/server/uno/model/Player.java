@@ -33,6 +33,9 @@ public class Player implements Comparable<Player>, Cloneable {
 	public void removeCard(Card card) {
 		if(card == null || !cards.contains(card))
 			throw new IllegalArgumentException("Wrong card");
+//		if(card.getNumber() > 11) { // TODO remove magic 
+//			cards.remove
+//		}
 		cards.remove(card);
 	}
 

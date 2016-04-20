@@ -66,7 +66,6 @@ public class RulesManager {
 			isThereBonus = false;
 		}
 		if (mover.equals(player) && !mover.isFirstMove && !isStepsAvailable()) {
-			System.err.println("No more steps");
 			mover.isFirstMove = true;
 			mover = getNextStepPlayer();
 		}
@@ -87,21 +86,22 @@ public class RulesManager {
 
 	public void makeFirstStep(Player player, Card card) throws Exception {
 		if (card.getColor().equals("black")) {
-			int color = (int) (Math.random() * 4);
-			switch (color) {
-			case 0:
-				card.setColor("red");
-				break;
-			case 1:
-				card.setColor("yellow");
-				break;
-			case 2:
-				card.setColor("green");
-				break;
-			case 3:
-				card.setColor("blue");
-				break;
-			}
+			card.setColor("red");
+//			int color = (int) (Math.random() * 4);
+//			switch (color) {
+//			case 0:
+//				card.setColor("red");
+//				break;
+//			case 1:
+//				card.setColor("yellow");
+//				break;
+//			case 2:
+//				card.setColor("green");
+//				break;
+//			case 3:
+//				card.setColor("blue");
+//				break;
+//			}
 		}
 		
 		mover = player;
@@ -119,7 +119,7 @@ public class RulesManager {
 		}
 	}
 
-	private Player getNextStepPlayer() throws Exception {
+	public Player getNextStepPlayer() throws Exception {
 		if (mover.getPlaceInDeque() > playersDeque.size())
 			throw new Exception("Wrong player position");
 

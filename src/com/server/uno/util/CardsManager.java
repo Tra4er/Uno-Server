@@ -38,7 +38,8 @@ public class CardsManager {
 			}
 				break;
 			case 10: {
-				// TODO
+				Player needless = rulesManager.getNextStepPlayer();
+				mover = rulesManager.getNextStepPlayer();
 			}
 				break;
 			case 11: {
