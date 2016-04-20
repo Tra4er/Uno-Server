@@ -11,7 +11,7 @@ import com.server.uno.util.StepTimer;
 
 public class Game {
 
-	public final int PLAYERS_NEEDED_TO_START = 2;
+	public final int PLAYERS_NEEDED_TO_START = 3;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 
@@ -33,7 +33,7 @@ public class Game {
 			}
 		}
 		rulesManager = new RulesManager(this);
-		rulesManager.makeFirstStep(new Player("001", "admin"), table.getCardFromDeck());
+		rulesManager.makeFirstStep(new Player(Player.STANDART_ID, Player.STANDART_NAME), table.getCardFromDeck());
 //		rulesManager.makeFirstStep(new Player("001", "admin"), new Card("black", 14));
 		timer.start();
 		started = true;

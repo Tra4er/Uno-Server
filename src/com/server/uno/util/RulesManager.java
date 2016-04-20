@@ -63,12 +63,15 @@ public class RulesManager {
 					getNextStepPlayer().addCard(cardsManager.popFromCardsPool());
 				}
 			}
+			if (!mover.equals(cardsManager.getNextMover())) {
+				mover = cardsManager.getNextMover();
+				checkForMoreSteps(player);
+				return;
+			}
 			isThereBonus = false;
 		}
-		if (mover.equals(player) && !mover.isFirstMove && !isStepsAvailable()) {
-			mover.isFirstMove = true;
-			mover = getNextStepPlayer();
-		}
+		
+		checkForMoreSteps(player);
 	}
 
 	private boolean isRightCard(Card card) throws Exception {
@@ -132,6 +135,20 @@ public class RulesManager {
 		}
 		return nextStepPlayer;
 	}
+	
+	public Player missNeedlessPlayerAndGetNextMover() throws Exception { // TODO test
+		if (mover.getPlaceInDeque() > playersDeque.size())
+			throw new Exception("Wrong player position");
+
+		Player nextStepPlayer = null;
+
+		if (mover.getPlaceInDeque() < playersDeque.size() - 2) {
+			nextStepPlayer = playersDeque.get(mover.getPlaceInDeque() + 2);
+		} else if (mover.getPlaceInDeque() < playersDeque.size()) {
+			nextStepPlayer = playersDeque.get(0);
+		}
+		return nextStepPlayer;
+	}
 
 	private boolean isStepsAvailable() throws Exception {
 		for (Card card : mover.getCards()) {
@@ -140,6 +157,13 @@ public class RulesManager {
 			}
 		}
 		return false;
+	}
+	
+	private void checkForMoreSteps(Player player) throws Exception {
+		if (mover.equals(player) && !mover.isFirstMove && !isStepsAvailable()) {
+			mover.isFirstMove = true;
+			mover = getNextStepPlayer();
+		}
 	}
 
 	private void punish(Player player) throws Exception {

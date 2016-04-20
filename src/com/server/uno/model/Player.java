@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Player implements Comparable<Player>, Cloneable {
 
-	private final static String STANDART_NAME = "Player";
+	public final static String STANDART_NAME = "Player";
+	public final static String STANDART_ID = "-1";
 
 	public final String id;
 	private volatile String name;
@@ -14,6 +15,10 @@ public class Player implements Comparable<Player>, Cloneable {
 	
 	public volatile boolean isFirstMove = true;;
 	public volatile boolean tamer; // TODO 
+	
+	public Player() {
+		id = STANDART_ID;
+	}
 	
 	public Player(String id) {
 		this(id, STANDART_NAME);

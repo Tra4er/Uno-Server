@@ -12,6 +12,7 @@ public class CardsManager {
 	private Game game;
 	private RulesManager rulesManager;
 	private Deque<Card> cardsPool = new ArrayDeque<>();
+	private Player nextMover = new Player(Player.STANDART_ID);
 
 	public CardsManager(Game game, RulesManager rulesManager) {
 		this.game = game;
@@ -22,7 +23,6 @@ public class CardsManager {
 		if (card == null)
 			throw new IllegalArgumentException("Wrong player or card");
 		
-		Player mover = rulesManager.getMover();
 
 		switch (card.getNumber()) {
 			case 0: {
@@ -34,12 +34,12 @@ public class CardsManager {
 			}
 				break;
 			case 7: {
-				mover.tamer = true;
+				//TODO
 			}
 				break;
 			case 10: {
-				Player needless = rulesManager.getNextStepPlayer();
-				mover = rulesManager.getNextStepPlayer();
+				nextMover = rulesManager.missNeedlessPlayerAndGetNextMover();
+				rulesManager.isThereBonus = true;
 			}
 				break;
 			case 11: {
@@ -74,5 +74,9 @@ public class CardsManager {
 	
 	public Card popFromCardsPool() {
 		return cardsPool.pop();
+	}
+
+	public Player getNextMover() {
+		return nextMover;
 	}
 }
