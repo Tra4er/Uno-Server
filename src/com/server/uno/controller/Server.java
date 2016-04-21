@@ -30,14 +30,14 @@ public class Server {
 	}
 
 	public static void update() throws Exception {
-		if (game.getPlayersToGo() <= 0 && game.started) {
-			// TODO
-		}
-		// Preparation state
-		if (game.getPlayersToGo() > 0) {
+		if (game.getPlayersToGo() <= 0) {
+			if (game.started) {
+				// TODO
+			} else {
+				game.start();
+			}
+		} else {
 			game.changeStatus("inRoom");
-		} else if (game.getPlayersToGo() <= 0 && !game.started) {
-			game.start();
 		}
 		socketsController.sendUpdatesToAllClients();
 	}

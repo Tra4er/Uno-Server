@@ -5,13 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.server.uno.controller.RulesManager;
 import com.server.uno.controller.Server;
-import com.server.uno.util.RulesManager;
 import com.server.uno.util.StepTimer;
 
 public class Game {
 
-	public final int PLAYERS_NEEDED_TO_START = 3;
+	public final int PLAYERS_NEEDED_TO_START = 2;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 
@@ -93,7 +93,7 @@ public class Game {
 	}
 
 	public Player getMover() throws CloneNotSupportedException {
-		return rulesManager.getMover();
+		return rulesManager.moversManager.getMover();
 	}
 
 	public int getPlayersToGo() {

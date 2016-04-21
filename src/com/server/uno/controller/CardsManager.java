@@ -1,4 +1,4 @@
-package com.server.uno.util;
+package com.server.uno.controller;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -37,8 +37,7 @@ public class CardsManager {
 		}
 			break;
 		case 10: {
-			rulesManager.setNextMover(rulesManager.getNextStepPlayer(rulesManager.getNextMover()));
-			rulesManager.isGap = true;
+			rulesManager.moversManager.missNextMover();
 		}
 			break;
 		case 11: {
@@ -46,13 +45,13 @@ public class CardsManager {
 		}
 			break;
 		case 12: {
-			rulesManager.giveNextPlayerCard();
-			rulesManager.giveNextPlayerCard();
+			rulesManager.moversManager.giveNextPlayerCard();
+			rulesManager.moversManager.giveNextPlayerCard();
 		}
 			break;
 		case 14: {
 			for (int i = 0; i < 4; i++) {
-				rulesManager.giveNextPlayerCard();
+				rulesManager.moversManager.giveNextPlayerCard();
 			}
 		}
 			break;
