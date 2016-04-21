@@ -11,13 +11,13 @@ import com.server.uno.model.Player;
 public class RulesManager {
 
 	private Game game;
-	private Player previousMover;
+	private Player previousMover; // TODO Create class Movers
 	private Player mover;
+	private Player nextMover;
 	private List<Player> playersDeque;
 	private CardsManager cardsManager;
 	private StepManager stepManager;
 
-	public boolean isThereBonusCards;
 	public boolean isGap;
 	public boolean isReverse;
 
@@ -31,7 +31,27 @@ public class RulesManager {
 
 	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
 																					// Multithreading
-		System.err.println("Mover " + mover);
+		System.out.println();
+		System.out.println("Player trying to makeStep");
+		System.out.println(player);
+		System.out.println();
+		System.out.println("His card");
+		System.out.println(card);
+		System.out.println();
+		System.out.println("*********");
+		System.out.println();
+		
+		System.out.println("previousMover");
+		System.out.println(previousMover);
+		System.out.println();
+		System.out.println("mover");
+		System.out.println(mover);
+		System.out.println();
+		System.out.println("nextMover");
+		System.out.println(nextMover);
+		System.out.println();
+		
+		
 		if(stepManager.makeStep(player, card))
 			changeMover();
 
@@ -42,24 +62,10 @@ public class RulesManager {
 	}
 
 	public void giveBonusesToAll(Player player) throws Exception {
-		if (isThereBonusCards) {
-			int i = 0;
-			while (i < cardsManager.getCardsPool().size()) {
-				getNextStepPlayer(mover).addCard(cardsManager.popFromCardsPool());
-			}
-			isThereBonusCards = false;
-		}
-		if (isGap) {
-			mover = cardsManager.getNextMover();
-			isGap = false;
-			return;
-		}
 		if (isReverse) {
 			Collections.reverse(playersDeque); // TODO
 			isReverse = false;
 		}
-		if (player.equals(mover)) // TODO || previousMover
-			changeMover();
 	}
 
 //	public void checkForMoreSteps(Player player) throws Exception {
@@ -82,6 +88,14 @@ public class RulesManager {
 	}
 
 	public void changeMover() throws Exception {
+		if (isGap) {
+			previousMover = mover;
+			mover = nextMover;
+			isGap = false;
+			nextMover = null;
+			return;
+		}
+		
 		previousMover = mover;
 		mover = getNextStepPlayer(mover);
 	}
@@ -144,6 +158,16 @@ public class RulesManager {
 			throw new NullPointerException("Wrong mover");
 		this.mover = mover;
 	}
+	
+	public Player getNextMover() {
+		return nextMover;
+	}
+
+	public void setNextMover(Player nextMover) {
+		if (nextMover == null)
+			throw new NullPointerException("Wrong mover");
+		this.nextMover = nextMover;
+	}
 
 	public List<Player> getPlayersDeque() {
 		return new ArrayList<Player>(playersDeque);
@@ -152,5 +176,4 @@ public class RulesManager {
 	public StepManager getStepManager() {
 		return stepManager;
 	}
-
 }

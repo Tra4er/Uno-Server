@@ -11,8 +11,6 @@ public class CardsManager {
 
 	private Game game;
 	private RulesManager rulesManager;
-	private Deque<Card> cardsPool = new ArrayDeque<>();
-	private Player nextMover;
 
 	public CardsManager(Game game, RulesManager rulesManager) {
 		this.game = game;
@@ -39,7 +37,7 @@ public class CardsManager {
 		}
 			break;
 		case 10: {
-			nextMover = rulesManager.getNextStepPlayer(nextMover);
+			rulesManager.setNextMover(rulesManager.getNextStepPlayer(rulesManager.getNextMover()));
 			rulesManager.isGap = true;
 		}
 			break;
@@ -53,10 +51,6 @@ public class CardsManager {
 		}
 			break;
 		case 14: {
-//			for (int i = 0; i < 4; i++) {
-//				cardsPool.push(game.getTable().getCardFromDeck());
-//			}
-//			rulesManager.isThereBonusCards = true;
 			for (int i = 0; i < 4; i++) {
 				rulesManager.giveNextPlayerCard();
 			}
@@ -64,17 +58,5 @@ public class CardsManager {
 			break;
 		}
 		game.setTopOpenCard(card);
-	}
-
-	public Deque<Card> getCardsPool() {
-		return new ArrayDeque<Card>(cardsPool);
-	}
-
-	public Card popFromCardsPool() {
-		return cardsPool.pop();
-	}
-
-	public Player getNextMover() {
-		return nextMover;
 	}
 }

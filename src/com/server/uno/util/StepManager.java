@@ -21,7 +21,8 @@ public class StepManager {
 		if (rulesManager.isRightCard(card)) {
 			// Checking if player is catching step
 			if (!rulesManager.getMover().equals(player) && game.getTable().getTopOpenCard().getNumber() == card.getNumber()
-					&& game.getTable().getTopOpenCard().getColor().equals(card.getColor()) || player.equals(rulesManager.getPreviousMover())) {
+					&& game.getTable().getTopOpenCard().getColor().equals(card.getColor()) || (player.equals(rulesManager.getPreviousMover()) 
+							&& game.getTable().getTopOpenCard().getNumber() == card.getNumber())) {
 				rulesManager.setMover(player);
 			}
 			// If he is having wrong card punish
@@ -76,18 +77,10 @@ public class StepManager {
 			// }
 		}
 		rulesManager.setMover(player);
+		rulesManager.setNextMover(rulesManager.getPlayersDeque().get(0));
 		cardsManager.putCard(card);
 		rulesManager.setMover(rulesManager.getPlayersDeque().get(0));
 
 //		rulesManager.giveBonusesToAll(player);
-		if (rulesManager.isThereBonusCards) {
-			if (!cardsManager.getCardsPool().isEmpty()) {
-				int i = 0;
-				while (i < cardsManager.getCardsPool().size()) {
-					rulesManager.getMover().addCard(cardsManager.popFromCardsPool());
-				}
-			}
-			rulesManager.isThereBonusCards = false;
-		}
 	}
 }

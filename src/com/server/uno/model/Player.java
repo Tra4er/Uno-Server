@@ -65,10 +65,10 @@ public class Player implements Comparable<Player>, Cloneable {
 			throw new NullPointerException("Wrong cards list");
 		this.cards = cards;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Player [id=" + id + ", name=" + name + "]";
+		return "Player [name=" + name + ", placeInDeque=" + placeInDeque + ", isFirstMove=" + isFirstMove + "]";
 	}
 
 	@Override
