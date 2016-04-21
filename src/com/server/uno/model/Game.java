@@ -111,7 +111,7 @@ public class Game {
 	}
 
 	public GameTable getTable() throws CloneNotSupportedException {
-		return table.clone();
+		return table;
 	}
 	
 	public void setTopOpenCard(Card topCard) { // TODO Valve

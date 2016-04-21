@@ -19,24 +19,24 @@ public class StepManager {
 	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
 		// Multithreading
 		if (rulesManager.isRightCard(card)) {
-			// Checking if player is mover
+			// Checking if player is catching step
 			if (!rulesManager.getMover().equals(player) && game.getTable().getTopOpenCard().getNumber() == card.getNumber()
-					&& game.getTable().getTopOpenCard().getColor().equals(card.getColor())) {
+					&& game.getTable().getTopOpenCard().getColor().equals(card.getColor()) || player.equals(rulesManager.getPreviousMover())) {
 				rulesManager.setMover(player);
 			}
-			// If he is not mover punish him
+			// If he is having wrong card punish
 			else if (!rulesManager.getMover().equals(player) && (!(game.getTable().getTopOpenCard().getNumber() == card.getNumber())
 					|| !(game.getTable().getTopOpenCard().getColor().equals(card.getColor())))) {
 				rulesManager.punish(player);
 			}
 			// Making move if he is mover
-			else if (rulesManager.getMover().equals(player)) {
+			if (rulesManager.getMover().equals(player)) { // removed else
 				if (rulesManager.getMover().isFirstMove) {
 					cardsManager.putCard(card);
 					rulesManager.getMover().removeCard(card);
 					rulesManager.getMover().isFirstMove = false;
 				} else if (!rulesManager.getMover().isFirstMove) {
-					if (isRightSecondStep(card)) {
+					if (rulesManager.isRightSecondCard(card)) {
 						cardsManager.putCard(card);
 						rulesManager.getMover().removeCard(card);
 					} else {
@@ -51,10 +51,6 @@ public class StepManager {
 
 	public RulesManager getRulesManager() {
 		return rulesManager;
-	}
-
-	public boolean isRightSecondStep(Card card) throws Exception {
-		return card.getNumber() == game.getTable().getTopOpenCard().getNumber();
 	}
 
 	public void makeFirstStep(Player player, Card card) throws Exception {

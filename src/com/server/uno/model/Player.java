@@ -13,7 +13,7 @@ public class Player implements Comparable<Player>, Cloneable {
 	private volatile List<Card> cards = new LinkedList<>();
 	private volatile int placeInDeque;
 	
-	public volatile boolean isFirstMove = true;;
+	public volatile boolean isFirstMove = true;
 	public volatile boolean tamer; // TODO 
 	
 	public Player() {
@@ -30,18 +30,20 @@ public class Player implements Comparable<Player>, Cloneable {
 	}
 	
 	public void addCard(Card card) {
-		if(card == null) 
+		if(card == null)  
 			return;
 		cards.add(card);
 	}
 	
 	public void removeCard(Card card) {
+		String temp = card.getColor();
+		if(card.getNumber() > 12) { // TODO remove Valve
+			card.setColor("black");
+		}
 		if(card == null || !cards.contains(card))
 			throw new IllegalArgumentException("Wrong card");
-//		if(card.getNumber() > 11) { // TODO remove magic 
-//			cards.remove
-//		}
 		cards.remove(card);
+		card.setColor(temp);
 	}
 
 	public String getName() {

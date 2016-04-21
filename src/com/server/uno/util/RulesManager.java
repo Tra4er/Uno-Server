@@ -11,6 +11,7 @@ import com.server.uno.model.Player;
 public class RulesManager {
 
 	private Game game;
+	private Player previousMover;
 	private Player mover;
 	private List<Player> playersDeque;
 	private CardsManager cardsManager;
@@ -30,38 +31,41 @@ public class RulesManager {
 
 	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
 																					// Multithreading
+		System.err.println("Number of move " + player.isFirstMove);
 		stepManager.makeStep(player, card);
 
 		giveBonusesToAll(player);
-
-		checkForMoreSteps(player);
+		
+		if (!isMoreStepsAvailable(previousMover)) 
+			previousMover.isFirstMove = true;
 	}
-	
 
 	public void giveBonusesToAll(Player player) throws Exception {
 		if (isThereBonusCards) {
 			int i = 0;
 			while (i < cardsManager.getCardsPool().size()) {
-				getNextStepPlayer(false).addCard(cardsManager.popFromCardsPool());
+				getNextStepPlayer(mover).addCard(cardsManager.popFromCardsPool());
 			}
 			isThereBonusCards = false;
 		}
 		if (isGap) {
 			mover = cardsManager.getNextMover();
 			isGap = false;
+			return;
 		}
 		if (isReverse) {
-			Collections.reverse(playersDeque);
+			Collections.reverse(playersDeque); // TODO
 			isReverse = false;
 		}
+		if (player.equals(mover)) // TODO || previousMover
+			changeMover();
 	}
-	
-	public void checkForMoreSteps(Player player) throws Exception {
-		if (mover.equals(player) && !mover.isFirstMove && !isStepsAvailable()) {
-			mover.isFirstMove = true;
-			mover = getNextStepPlayer(false);
-		}
-	}
+
+//	public void checkForMoreSteps(Player player) throws Exception {
+//		if (mover.equals(player) && !mover.isFirstMove && !isMoreStepsAvailable()) {
+//			mover.isFirstMove = true;
+//		}
+//	}
 
 	public boolean isRightCard(Card card) throws Exception {
 		Card topCard = game.getTable().getTopOpenCard();
@@ -72,21 +76,29 @@ public class RulesManager {
 		return false;
 	}
 
-	public Player getNextStepPlayer(boolean isGap) throws Exception {
-		if (mover.getPlaceInDeque() > playersDeque.size())
+	public boolean isRightSecondCard(Card card) throws Exception {
+		return card.getNumber() == game.getTable().getTopOpenCard().getNumber();
+	}
+
+	public void changeMover() throws Exception {
+		mover = getNextStepPlayer(mover);
+	}
+
+	public Player getNextStepPlayer(Player player) throws Exception {
+		if (player == null)
+			player = mover;
+		if (player.getPlaceInDeque() > playersDeque.size())
 			throw new Exception("Wrong player position");
 
-		int gap = 1;
-		if (isGap)
-			gap = 2;
-		
 		Player nextStepMover = null;
-		
-		if (mover.getPlaceInDeque() == playersDeque.size() - gap)
+		previousMover = player;
+		System.err.println("Adding previus Mover");
+
+		if (player.getPlaceInDeque() == playersDeque.size() - 1)
 			nextStepMover = playersDeque.get(0);
-		else 
-			nextStepMover = playersDeque.get(mover.getPlaceInDeque() + gap);
-		
+		else
+			nextStepMover = playersDeque.get(player.getPlaceInDeque() + 1);
+
 		return nextStepMover;
 	}
 
@@ -99,9 +111,9 @@ public class RulesManager {
 			playersDeque.get(i).setPlaceInDeque(i);
 		}
 	}
-	
-	public boolean isStepsAvailable() throws Exception {
-		for (Card card : mover.getCards()) {
+
+	public boolean isMoreStepsAvailable(Player player) throws Exception {
+		for (Card card : player.getCards()) {
 			if (card.getNumber() == game.getTable().getTopOpenCard().getNumber()) {
 				return true;
 			}
@@ -109,7 +121,17 @@ public class RulesManager {
 		return false;
 	}
 
-	public Player getMover() throws CloneNotSupportedException {
+	public Player getPreviousMover() {
+		return previousMover;
+	}
+
+	public void setPreviousMover(Player previousMover) {
+		if (previousMover == null)
+			throw new NullPointerException("Wrong mover");
+		this.previousMover = previousMover;
+	}
+
+	public Player getMover() {
 		return mover;
 	}
 
@@ -122,7 +144,7 @@ public class RulesManager {
 	public List<Player> getPlayersDeque() {
 		return new ArrayList<Player>(playersDeque);
 	}
-	
+
 	public StepManager getStepManager() {
 		return stepManager;
 	}

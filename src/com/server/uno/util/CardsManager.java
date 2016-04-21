@@ -25,48 +25,43 @@ public class CardsManager {
 
 		int gaps = 0;
 		
-		switch (card.getNumber()) {
-		case 0: {
-			// TODO
-		}
-			break;
-		case 5: {
-			// TODO
-		}
-			break;
-		case 7: {
-			// TODO
-		}
-			break;
-		case 10: {
-			nextMover = rulesManager.getNextStepPlayer(true);
-			rulesManager.isGap = true;
-		}
-			break;
-		case 11: {
-			rulesManager.isReverse = true;
-		}
-			break;
-		case 12: {
-			cardsPool.push(game.getTable().getCardFromDeck());
-			cardsPool.push(game.getTable().getCardFromDeck());
-			rulesManager.isThereBonusCards = true;
-		}
-			break;
-		case 14: {
-			for (int i = 0; i < 4; i++) {
-				cardsPool.push(game.getTable().getCardFromDeck());
-			}
-			rulesManager.isThereBonusCards = true;
-		}
-			break;
-		}
+//		switch (card.getNumber()) {
+//		case 0: {
+//			// TODO
+//		}
+//			break;
+//		case 5: {
+//			// TODO
+//		}
+//			break;
+//		case 7: {
+//			// TODO
+//		}
+//			break;
+//		case 10: {
+//			nextMover = rulesManager.getNextStepPlayer(nextMover);
+//			rulesManager.isGap = true;
+//		}
+//			break;
+//		case 11: {
+//			rulesManager.isReverse = true;
+//		}
+//			break;
+//		case 12: {
+//			cardsPool.push(game.getTable().getCardFromDeck());
+//			cardsPool.push(game.getTable().getCardFromDeck());
+//			rulesManager.isThereBonusCards = true;
+//		}
+//			break;
+//		case 14: {
+//			for (int i = 0; i < 4; i++) {
+//				cardsPool.push(game.getTable().getCardFromDeck());
+//			}
+//			rulesManager.isThereBonusCards = true;
+//		}
+//			break;
+//		}
 		game.setTopOpenCard(card);
-	}
-
-	public Deque<Card> getBonusCards() {
-		// TODO with removing cards from list(Deque)
-		return null;
 	}
 
 	public Deque<Card> getCardsPool() {
@@ -78,8 +73,6 @@ public class CardsManager {
 	}
 
 	public Player getNextMover() {
-		Player temp = nextMover;
-		nextMover = null;
-		return temp;
+		return nextMover;
 	}
 }
