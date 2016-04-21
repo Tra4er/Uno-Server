@@ -25,42 +25,44 @@ public class CardsManager {
 
 		int gaps = 0;
 		
-//		switch (card.getNumber()) {
-//		case 0: {
-//			// TODO
-//		}
-//			break;
-//		case 5: {
-//			// TODO
-//		}
-//			break;
-//		case 7: {
-//			// TODO
-//		}
-//			break;
-//		case 10: {
-//			nextMover = rulesManager.getNextStepPlayer(nextMover);
-//			rulesManager.isGap = true;
-//		}
-//			break;
-//		case 11: {
-//			rulesManager.isReverse = true;
-//		}
-//			break;
-//		case 12: {
-//			cardsPool.push(game.getTable().getCardFromDeck());
-//			cardsPool.push(game.getTable().getCardFromDeck());
-//			rulesManager.isThereBonusCards = true;
-//		}
-//			break;
-//		case 14: {
+		switch (card.getNumber()) {
+		case 0: {
+			// TODO
+		}
+			break;
+		case 5: {
+			// TODO
+		}
+			break;
+		case 7: {
+			// TODO
+		}
+			break;
+		case 10: {
+			nextMover = rulesManager.getNextStepPlayer(nextMover);
+			rulesManager.isGap = true;
+		}
+			break;
+		case 11: {
+			rulesManager.isReverse = true;
+		}
+			break;
+		case 12: {
+			rulesManager.giveNextPlayerCard();
+			rulesManager.giveNextPlayerCard();
+		}
+			break;
+		case 14: {
 //			for (int i = 0; i < 4; i++) {
 //				cardsPool.push(game.getTable().getCardFromDeck());
 //			}
 //			rulesManager.isThereBonusCards = true;
-//		}
-//			break;
-//		}
+			for (int i = 0; i < 4; i++) {
+				rulesManager.giveNextPlayerCard();
+			}
+		}
+			break;
+		}
 		game.setTopOpenCard(card);
 	}
 

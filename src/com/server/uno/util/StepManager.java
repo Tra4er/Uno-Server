@@ -16,7 +16,7 @@ public class StepManager {
 		this.cardsManager = cardsManager;
 	}
 
-	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
+	public synchronized boolean makeStep(Player player, Card card) throws Exception { // TODO
 		// Multithreading
 		if (rulesManager.isRightCard(card)) {
 			// Checking if player is catching step
@@ -35,10 +35,12 @@ public class StepManager {
 					cardsManager.putCard(card);
 					rulesManager.getMover().removeCard(card);
 					rulesManager.getMover().isFirstMove = false;
+					return true;
 				} else if (!rulesManager.getMover().isFirstMove) {
 					if (rulesManager.isRightSecondCard(card)) {
 						cardsManager.putCard(card);
 						rulesManager.getMover().removeCard(card);
+						return true;
 					} else {
 						rulesManager.punish(player);
 					}
@@ -47,6 +49,7 @@ public class StepManager {
 		} else {
 			rulesManager.punish(player);
 		}
+		return false;
 	}
 
 	public RulesManager getRulesManager() {

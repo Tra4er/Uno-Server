@@ -31,10 +31,11 @@ public class RulesManager {
 
 	public synchronized void makeStep(Player player, Card card) throws Exception { // TODO
 																					// Multithreading
-		System.err.println("Number of move " + player.isFirstMove);
-		stepManager.makeStep(player, card);
+		System.err.println("Mover " + mover);
+		if(stepManager.makeStep(player, card))
+			changeMover();
 
-		giveBonusesToAll(player);
+//		giveBonusesToAll(player);
 		
 		if (!isMoreStepsAvailable(previousMover)) 
 			previousMover.isFirstMove = true;
@@ -81,6 +82,7 @@ public class RulesManager {
 	}
 
 	public void changeMover() throws Exception {
+		previousMover = mover;
 		mover = getNextStepPlayer(mover);
 	}
 
@@ -91,8 +93,6 @@ public class RulesManager {
 			throw new Exception("Wrong player position");
 
 		Player nextStepMover = null;
-		previousMover = player;
-		System.err.println("Adding previus Mover");
 
 		if (player.getPlaceInDeque() == playersDeque.size() - 1)
 			nextStepMover = playersDeque.get(0);
@@ -104,6 +104,10 @@ public class RulesManager {
 
 	public void punish(Player player) throws Exception {
 		player.addCard(game.getTable().getCardFromDeck());
+	}
+	
+	public void giveNextPlayerCard() throws Exception {
+		getNextStepPlayer(mover).addCard(game.getTable().getCardFromDeck());
 	}
 
 	public void givePlayersDeque() {
