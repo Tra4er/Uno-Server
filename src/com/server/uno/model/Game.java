@@ -5,8 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.server.uno.controller.RulesManager;
+import com.server.uno.controller.RulesController;
 import com.server.uno.controller.Server;
+import com.server.uno.controller.StepController;
 import com.server.uno.util.StepTimer;
 
 public class Game {
@@ -23,8 +24,9 @@ public class Game {
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
 	private GameTable table = new GameTable();
 
-	private RulesManager rulesManager;
-
+	private RulesController rulesController = new RulesController(this);
+	private StepController stepController = new StepController(rulesController);
+	
 	public void start() throws Exception {
 		changeStatus("inGame");
 		for (Player player : players) {
@@ -32,34 +34,26 @@ public class Game {
 				player.addCard(table.getCardFromDeck());
 			}
 		}
-		rulesManager = new RulesManager(this);
-		rulesManager.getStepManager().makeFirstStep(new Player(Player.STANDART_ID, Player.STANDART_NAME), table.getCardFromDeck());
-//		rulesManager.makeFirstStep(new Player("001", "admin"), new Card("black", 14));
+//		stepController.makeFirstStep(); TODO
 		timer.start();
 		started = true;
 		Server.update();
 	}
 
-//	public void play() {
-//		TODO, Mb.
-//	}
-
-	public void makeMove(Player player, Card card) { // TODO
+	public void makeMove(Player player, Card card) { 
+		
 		try {
-			rulesManager.makeStep(player, card);
+			stepController.makeStep(player, card);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);
 		}
 	}
 	
-	public void giveCard(Player player) throws Exception {
-		if(!player.equals(getMover()))
-			return;
-		
-		player.addCard(table.getCardFromDeck());
+	public Player getMover() {
+		return rulesController.getMover();
 	}
-
+	
 	public String getStatus() {
 		return new String(status);
 	}
@@ -90,10 +84,6 @@ public class Game {
 			throw new NullPointerException("Wrong Player");
 		players.add(player);
 		playersToGo--;
-	}
-
-	public Player getMover() throws CloneNotSupportedException {
-		return rulesManager.moversManager.getMover();
 	}
 
 	public int getPlayersToGo() {
