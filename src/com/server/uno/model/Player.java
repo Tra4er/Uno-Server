@@ -11,7 +11,6 @@ public class Player implements Comparable<Player>, Cloneable {
 	public final String id;
 	private volatile String name;
 	private volatile List<Card> cards = new LinkedList<>();
-	private volatile int placeInDeque;
 	
 	public volatile boolean isFirstMove = true;
 	public volatile boolean tamer; // TODO 
@@ -68,7 +67,7 @@ public class Player implements Comparable<Player>, Cloneable {
 
 	@Override
 	public String toString() {
-		return "Player [name=" + name + ", placeInDeque=" + placeInDeque + ", isFirstMove=" + isFirstMove + "]";
+		return "Player [name=" + name + ", isFirstMove=" + isFirstMove + "]";
 	}
 
 	@Override
@@ -82,20 +81,6 @@ public class Player implements Comparable<Player>, Cloneable {
 	@Override
 	public Player clone() throws CloneNotSupportedException {
 		return (Player) super.clone();
-	}
-
-	/**
-	 * 
-	 * @return position starting from 0
-	 */
-	public int getPlaceInDeque() {
-		return placeInDeque;
-	}
-
-	public void setPlaceInDeque(int placeInDeque) {
-		if(placeInDeque < 0) 
-			throw new IllegalArgumentException("Wrong placeInDeque: " + placeInDeque);
-		this.placeInDeque = placeInDeque;
 	}
 
 }

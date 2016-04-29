@@ -62,7 +62,7 @@ public class GameTable implements Cloneable {
 	}
 
 	public Card getTopOpenCard() throws Exception {
-		return topOpenCard.clone();
+		return topOpenCard;
 	}
 
 	public void setTopOpenCard(Card topCard) {

@@ -24,8 +24,8 @@ public class Game {
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
 	private GameTable table = new GameTable();
 
-	private RulesController rulesController = new RulesController(this);
-	private StepController stepController = new StepController(rulesController);
+	public RulesController rulesController = new RulesController(this);
+	public StepController stepController = new StepController(rulesController);
 	
 	public void start() throws Exception {
 		changeStatus("inGame");
@@ -34,10 +34,10 @@ public class Game {
 				player.addCard(table.getCardFromDeck());
 			}
 		}
-//		stepController.makeFirstStep(); TODO
+		rulesController.givePlayersDeque(players);
+		stepController.makeFirstStep(this, new Player(Player.STANDART_ID, Player.STANDART_NAME), table.getCardFromDeck());
 		timer.start();
 		started = true;
-		Server.update();
 	}
 
 	public void makeMove(Player player, Card card) { 

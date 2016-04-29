@@ -1,6 +1,7 @@
 package com.server.uno.controller;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
@@ -11,10 +12,14 @@ public class RulesController {
 	private Player mover;
 	
 	private Game game;
-	private ArrayList<Player> playersDeque = new ArrayList<>();
+	private ArrayList<Player> playersDeque;
 	
 	public RulesController(Game game) {
 		this.game = game;
+	}
+	
+	public void givePlayersDeque(Set<Player> players) {
+		playersDeque = new ArrayList<>(players);
 	}
 	
 	public Player getPrevMover() {
@@ -32,5 +37,9 @@ public class RulesController {
 		if (mover == null)
 			throw new NullPointerException();
 		this.mover = mover;
+	}
+
+	public ArrayList<Player> getPlayersDeque() {
+		return new ArrayList<>(playersDeque);
 	}
 }
