@@ -12,7 +12,7 @@ import com.server.uno.util.StepTimer;
 
 public class Game {
 
-	public final int PLAYERS_NEEDED_TO_START = 2;
+	public final int PLAYERS_NEEDED_TO_START = 6;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 

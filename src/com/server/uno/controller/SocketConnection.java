@@ -86,25 +86,28 @@ public class SocketConnection extends Thread {
 		while (!socket.isClosed()) {
 			try {
 				Server.update();
-				jsonWorker.parseToNewJson(buffReader.readLine());
+				String massege = buffReader.readLine();
+				jsonWorker.parseToNewJson(massege);
 				Server.log.info("Request from " + player + ": " + jsonWorker);
 				if (jsonWorker.getRequestStatus().equals("move"))
 					game.makeMove(player, jsonWorker.getMoverCard());
 				if (jsonWorker.getRequestStatus().equals("getCard"))
-//					game.giveCard(player); TODO
-				if (jsonWorker.getRequestStatus().equals("closeConnection")) {
-					socket.close();
-					Server.log.warn(player + " is closing SOCKET.");
-				}
+					// game.giveCard(player); TODO
+					if (jsonWorker.getRequestStatus().equals("closeConnection")) {
+						socket.close();
+						Server.log.warn(player + " is closing SOCKET.");
+					}
 				// TODO
 			} catch (Exception e) {
-				if (e.getMessage().equals("Connection reset")) {
-					socket.close();
-					Server.log.warn("Unexpected SOCKET closing with: " + player + ".");
-				} // TODO Remove player from set
-				else {
-					e.printStackTrace();
-					Server.log.error(e);
+				if (e.getMessage() != null) {
+					if (e.getMessage().equals("Connection reset")) {
+						socket.close();
+						Server.log.warn("Unexpected SOCKET closing with: " + player + ".");
+					} // TODO Remove player from set
+					else {
+						e.printStackTrace();
+						Server.log.error(e);
+					}
 				}
 			}
 		}

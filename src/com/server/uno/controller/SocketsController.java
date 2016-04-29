@@ -3,6 +3,8 @@ package com.server.uno.controller;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.server.uno.model.Game;
 
@@ -14,10 +16,7 @@ public class SocketsController extends Thread {
 	private ServerSocket serverSocket;
 	private Game game;
 
-	private volatile ArrayList<SocketConnection> connections = new ArrayList<>(); // TODO With some locker 
-//	private AtomicReferenceArray<SocketConnection> connections = new AtomicReferenceArray<>(CONNECTIONS_NUMBER);
-//	private BlockingQueue connections = new BlockingQueue<E>() {
-//	};
+	private List<SocketConnection> connections = Collections.synchronizedList(new ArrayList<SocketConnection>()); 
 
 	public SocketsController(ServerSocket serverSocket, Game game) {
 		this.serverSocket = serverSocket;
