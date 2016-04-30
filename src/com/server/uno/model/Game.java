@@ -27,7 +27,7 @@ public class Game {
 	private GameTable table = new GameTable();
 	
 	public RulesController rulesController = new RulesController(this);
-	public StepController stepController = new StepController(rulesController);
+	public StepController stepController = new StepController(this, rulesController);
 	
 	public void start() throws Exception {
 		changeStatus("inGame");
@@ -103,7 +103,7 @@ public class Game {
 		return timer.getTime();
 	}
 
-	public GameTable getTable() throws CloneNotSupportedException {
+	public GameTable getTable() {
 		return table;
 	}
 	

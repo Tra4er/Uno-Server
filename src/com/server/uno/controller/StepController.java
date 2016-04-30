@@ -6,15 +6,21 @@ import com.server.uno.model.Player;
 
 public class StepController {
 
+	private Game game;
 	private RulesController rulesController;
+	private CardsWorker cardsWorker;
 	
-	public StepController(RulesController rulesController) {
+	public StepController(Game game, RulesController rulesController) {
+		this.game = game;
 		this.rulesController = rulesController;
+		cardsWorker = new CardsWorker(game);
 	}
 	
 	public synchronized void makeStep(Player player, Card card) {
 		if(player.equals(rulesController.getMover())) {
-			
+			cardsWorker.putCard(card);
+			player.removeCard(card);
+			rulesController.endMoverMove();
 		}
 	}
 	
