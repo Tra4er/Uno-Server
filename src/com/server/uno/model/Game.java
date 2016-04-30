@@ -12,9 +12,11 @@ import com.server.uno.util.StepTimer;
 
 public class Game {
 
-	public final int PLAYERS_NEEDED_TO_START = 6;
+	public final int PLAYERS_NEEDED_TO_START = 2;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
+	
+	public static final Player ADMIN = new Player(Player.STANDART_ID, Player.STANDART_NAME);
 
 	public volatile boolean started;
 
@@ -23,7 +25,7 @@ public class Game {
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
 	private GameTable table = new GameTable();
-
+	
 	public RulesController rulesController = new RulesController(this);
 	public StepController stepController = new StepController(rulesController);
 	
@@ -35,7 +37,7 @@ public class Game {
 			}
 		}
 		rulesController.givePlayersDeque(players);
-		stepController.makeFirstStep(this, new Player(Player.STANDART_ID, Player.STANDART_NAME), table.getCardFromDeck());
+		stepController.makeFirstStep(this, ADMIN, table.getCardFromDeck());
 		timer.start();
 		started = true;
 	}
@@ -44,6 +46,7 @@ public class Game {
 		
 		try {
 			stepController.makeStep(player, card);
+//			rulesController.goToNextMover(); TODO
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);

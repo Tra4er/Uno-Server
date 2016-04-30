@@ -10,6 +10,7 @@ public class RulesController {
 
 	private Player prevMover;
 	private Player mover;
+	private Player nobody = new Player();
 	
 	private Game game;
 	private ArrayList<Player> playersDeque;
@@ -18,8 +19,23 @@ public class RulesController {
 		this.game = game;
 	}
 	
+	public void goToNextMover() {
+		if(mover.getPosition() == playersDeque.size() - 1)
+			mover = playersDeque.get(0);
+		else
+			mover = playersDeque.get(mover.getPosition() + 1);
+	}
+	
+	public void endMoverMove() {
+		prevMover = mover;
+		mover = Game.ADMIN;
+	}
+	
 	public void givePlayersDeque(Set<Player> players) {
 		playersDeque = new ArrayList<>(players);
+		for(int i = 0; i < playersDeque.size(); i++) {
+			playersDeque.get(i).setPosition(i);
+		}
 	}
 	
 	public Player getPrevMover() {
