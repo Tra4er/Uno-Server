@@ -43,10 +43,11 @@ public class Game {
 	}
 
 	public void makeMove(Player player, Card card) { 
-		
+		Bonuses bonuses;
 		try {
 			stepController.makeStep(player, card);
-//			rulesController.goToNextMover(); TODO
+			rulesController.giveBonuses(stepController.getBonuses());
+			rulesController.goToNextMover();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);

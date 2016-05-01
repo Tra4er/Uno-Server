@@ -3,6 +3,7 @@ package com.server.uno.controller;
 import java.util.ArrayList;
 import java.util.Set;
 
+import com.server.uno.model.Bonuses;
 import com.server.uno.model.Game;
 import com.server.uno.model.Player;
 
@@ -19,11 +20,15 @@ public class RulesController {
 		this.game = game;
 	}
 	
+	public void giveBonuses(Bonuses bonuses) {
+		
+	}
+	
 	public void goToNextMover() {
-		if(mover.getPosition() == playersDeque.size() - 1)
+		if(prevMover.getPosition() == playersDeque.size() - 1)
 			mover = playersDeque.get(0);
 		else
-			mover = playersDeque.get(mover.getPosition() + 1);
+			mover = playersDeque.get(prevMover.getPosition() + 1);
 	}
 	
 	public void endMoverMove() {

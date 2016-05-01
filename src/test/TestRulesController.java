@@ -30,10 +30,17 @@ public class TestRulesController {
 	}
 	
 	@Test
+	public void testGiveBonuses() {
+		
+	}
+	
+	@Test
 	public void testGoToNextMover() {
 		assertEquals(one, rulesController.getMover());
+		rulesController.endMoverMove();
 		rulesController.goToNextMover();
 		assertEquals(two, rulesController.getMover());
+		rulesController.endMoverMove();
 		rulesController.goToNextMover();
 		assertEquals(zero, rulesController.getMover());
 	}
