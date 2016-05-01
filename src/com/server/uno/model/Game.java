@@ -12,7 +12,7 @@ import com.server.uno.util.StepTimer;
 
 public class Game {
 
-	public final int PLAYERS_NEEDED_TO_START = 2;
+	public final int PLAYERS_NEEDED_TO_START = 3;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 	
@@ -35,6 +35,7 @@ public class Game {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
+			player.addCard(new Card("blue", 14));
 		}
 		rulesController.givePlayersDeque(players);
 		stepController.makeFirstStep(this, ADMIN, table.getCardFromDeck());
@@ -43,7 +44,6 @@ public class Game {
 	}
 
 	public void makeMove(Player player, Card card) { 
-		Bonuses bonuses;
 		try {
 			stepController.makeStep(player, card);
 			rulesController.giveNextMoverBonuses(stepController.getBonuses());

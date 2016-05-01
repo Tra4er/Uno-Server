@@ -24,6 +24,7 @@ public class RulesController {
 	public void giveNextMoverBonuses(Bonuses bonuses) {
 		Card topCard = game.getTable().getTopOpenCard();
 		Player nextMover = getNextMover();
+		System.out.println(bonuses.getCardsSize());
 		
 		if (bonuses.isCards) {
 			boolean giveCards = true;

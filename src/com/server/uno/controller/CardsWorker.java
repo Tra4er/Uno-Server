@@ -12,8 +12,7 @@ public class CardsWorker {
 		this.game = game;
 	}
 	
-	public Bonuses putCard(Card card) {
-		Bonuses bonuses = new Bonuses();
+	public void putCard(Card card, Bonuses bonuses) {
 		switch (card.getNumber()) {
 		case 0: {
 			// TODO
@@ -47,6 +46,5 @@ public class CardsWorker {
 			break;
 		}
 		game.setTopOpenCard(card);
-		return bonuses;
 	}
 }

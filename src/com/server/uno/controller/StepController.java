@@ -10,7 +10,7 @@ public class StepController {
 	private Game game;
 	private RulesController rulesController;
 	private CardsWorker cardsWorker;
-	private Bonuses bonuses;
+	private Bonuses bonuses = new Bonuses();
 	
 	public StepController(Game game, RulesController rulesController) {
 		this.game = game;
@@ -20,7 +20,7 @@ public class StepController {
 	
 	public synchronized void makeStep(Player player, Card card) {
 		if(player.equals(rulesController.getMover())) {
-			bonuses = cardsWorker.putCard(card);
+			cardsWorker.putCard(card, bonuses);
 			player.removeCard(card);
 			rulesController.endMoverMove();
 		}
