@@ -61,7 +61,7 @@ public class GameTable implements Cloneable {
 		return new ArrayDeque<Card>(deck);
 	}
 
-	public Card getTopOpenCard() throws Exception {
+	public Card getTopOpenCard() {
 		return topOpenCard;
 	}
 

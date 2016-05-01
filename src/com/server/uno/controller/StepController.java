@@ -27,8 +27,9 @@ public class StepController {
 	}
 	
 	public void makeFirstStep(Game game, Player player, Card card) { // TODO
+		rulesController.setPrevMover(rulesController.getPlayersDeque().get(rulesController.getPlayersDeque().size() - 1));
 		game.setTopOpenCard(card);
-		game.rulesController.setMover(game.rulesController.getPlayersDeque().get(0));
+		rulesController.setMover(game.rulesController.getPlayersDeque().get(0));
 	}
 
 	public Bonuses getBonuses() {

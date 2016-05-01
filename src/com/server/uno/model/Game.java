@@ -46,7 +46,7 @@ public class Game {
 		Bonuses bonuses;
 		try {
 			stepController.makeStep(player, card);
-			rulesController.giveBonuses(stepController.getBonuses());
+			rulesController.giveNextMoverBonuses(stepController.getBonuses());
 			rulesController.goToNextMover();
 		} catch (Exception e) {
 			e.printStackTrace();
