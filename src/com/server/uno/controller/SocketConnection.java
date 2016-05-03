@@ -92,11 +92,11 @@ public class SocketConnection extends Thread {
 				if (jsonWorker.getRequestStatus().equals("move"))
 					game.makeMove(player, jsonWorker.getMoverCard());
 				if (jsonWorker.getRequestStatus().equals("getCard"))
-					// game.giveCard(player); TODO
-					if (jsonWorker.getRequestStatus().equals("closeConnection")) {
-						socket.close();
-						Server.log.warn(player + " is closing SOCKET.");
-					}
+					game.giveCard(player);
+				if (jsonWorker.getRequestStatus().equals("closeConnection")) {
+					socket.close();
+					Server.log.warn(player + " is closing SOCKET.");
+				}
 				// TODO
 			} catch (Exception e) {
 				if (e.getMessage() != null) {

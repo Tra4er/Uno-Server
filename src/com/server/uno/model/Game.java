@@ -73,6 +73,11 @@ public class Game {
 		Server.log.info("Game status changed: " + status);
 	}
 
+	public void giveCard(Player player) {
+		if(player.equals(rulesController.getMover())) 
+			player.addCard(table.getCardFromDeck());
+	}
+	
 	public List<String> getPlayersNames() {
 		ArrayList<String> names = new ArrayList<>();
 		for (Player p : players) {
