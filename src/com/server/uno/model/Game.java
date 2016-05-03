@@ -45,9 +45,10 @@ public class Game {
 
 	public void makeMove(Player player, Card card) {
 		try {
+			Card prevCard = table.getTopOpenCard();
 			if (stepController.makeStep(player, card)) {
-				if ((table.getTopOpenCard().getNumber() == 12 || table.getTopOpenCard().getNumber() == 14)
-						&& card.getNumber() != table.getTopOpenCard().getNumber())
+				if ((prevCard.getNumber() == 12 || prevCard.getNumber() == 14) 
+						&& card.getNumber() != prevCard.getNumber())
 					rulesController.giveThisMoverBonuses(stepController.getBonuses());
 				else
 					rulesController.giveNextMoverBonuses(stepController.getBonuses());
