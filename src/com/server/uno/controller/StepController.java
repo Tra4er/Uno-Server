@@ -19,10 +19,13 @@ public class StepController {
 	}
 
 	public synchronized boolean makeStep(Player player, Card card) {
+		Card topCard = game.getTable().getTopOpenCard();
 		if (player.equals(rulesController.getMover())) {
-			cardsWorker.putCard(card, bonuses);
-			player.removeCard(card);
-			return true;
+			if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()) {
+				cardsWorker.putCard(card, bonuses);
+				player.removeCard(card);
+				return true;
+			}
 		}
 		if (player.equals(rulesController.getPrevMover())) {
 			if (card.getNumber() == game.getTable().getTopOpenCard().getNumber()) {
