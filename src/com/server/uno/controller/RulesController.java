@@ -51,7 +51,6 @@ public class RulesController {
 	public void goToNextMover() {
 		prevMover = mover;
 		int padding  = 1 + bonuses.takeGaps();
-		System.out.println(padding);
 		if (mover.getPosition() == playersDeque.size() - padding)
 			mover = playersDeque.get(0);
 		else if (mover.getPosition() > playersDeque.size() - padding){

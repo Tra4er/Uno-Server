@@ -12,7 +12,7 @@ import com.server.uno.util.StepTimer;
 
 public class Game {
 
-	public final int PLAYERS_NEEDED_TO_START = 3;
+	public final int PLAYERS_NEEDED_TO_START = 2;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 
@@ -35,13 +35,14 @@ public class Game {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			player.addCard(new Card("green", 10));
-			player.addCard(new Card("green", 10));
 		}
 		rulesController.givePlayersDeque(players);
-		stepController.makeFirstStep(this, ADMIN, table.getCardFromDeck());
+		stepController.makeFirstStep(this, rulesController.getPlayersDeque().get(rulesController.getPlayersDeque().size() - 1), new Card("black", 14));
+		rulesController.giveNextMoverBonuses(stepController.getBonuses());
+		rulesController.setMover(rulesController.getPlayersDeque().get(0));
 		timer.start();
 		started = true;
+		Server.update();
 	}
 
 	public void makeMove(Player player, Card card) {
@@ -58,7 +59,6 @@ public class Game {
 					rulesController.goToNextMover();
 				else if (!player.equals(rulesController.getPrevMover()) || (table.getTopOpenCard().getNumber() == 10 && card.getNumber() == 10)) {
 					rulesController.goToNextMover();
-					System.out.println("GOING NEXT");
 				}
 			}
 		} catch (Exception e) {
