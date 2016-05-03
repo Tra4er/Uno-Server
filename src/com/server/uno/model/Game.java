@@ -47,7 +47,8 @@ public class Game {
 		try {
 			if (stepController.makeStep(player, card)) {
 				rulesController.giveNextMoverBonuses(stepController.getBonuses());
-				rulesController.goToNextMover();
+				if (!player.equals(rulesController.getPrevMover()))
+					rulesController.goToNextMover();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

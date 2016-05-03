@@ -3,9 +3,7 @@ package test;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,11 +55,9 @@ public class TestRulesController {
 	public void testGiveBonuses() {
 		bonuses.addCardInToPool(new Card("red", 2));
 		bonuses.addCardInToPool(new Card("red", 2));
-		// FORGET ABOUT THIS PART
 
 		assertEquals(1, rulesController.getNextMover().getCards().size()); // mover
 																			// 0
-
 		makeMove(); // next is mover 0
 
 		assertEquals(3, rulesController.getMover().getCards().size()); // mover
