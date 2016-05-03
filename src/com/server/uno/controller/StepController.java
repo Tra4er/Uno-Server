@@ -39,7 +39,7 @@ public class StepController {
 		return false;
 	}
 
-	public void makeFirstStep(Game game, Player player, Card card) { // TODO
+	public void makeFirstStep(Game game, Player player, Card card) { // TODO add +2 and +4
 		if(card.getColor().equals("black")) {
 			int color = (int) (Math.random() * 4);
 			switch (color) {

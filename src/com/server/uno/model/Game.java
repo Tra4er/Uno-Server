@@ -35,7 +35,8 @@ public class Game {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			player.addCard(new Card("green", 12));
+			player.addCard(new Card("green", 10));
+			player.addCard(new Card("green", 10));
 		}
 		rulesController.givePlayersDeque(players);
 		stepController.makeFirstStep(this, ADMIN, table.getCardFromDeck());
@@ -52,8 +53,13 @@ public class Game {
 					rulesController.giveThisMoverBonuses(stepController.getBonuses());
 				else
 					rulesController.giveNextMoverBonuses(stepController.getBonuses());
-				if (!player.equals(rulesController.getPrevMover()))
+				
+				if(prevCard.getNumber() == 10)
 					rulesController.goToNextMover();
+				else if (!player.equals(rulesController.getPrevMover()) || (table.getTopOpenCard().getNumber() == 10 && card.getNumber() == 10)) {
+					rulesController.goToNextMover();
+					System.out.println("GOING NEXT");
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
