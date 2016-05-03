@@ -1,6 +1,7 @@
 package com.server.uno.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -64,6 +65,15 @@ public class RulesController {
 	
 	public void givePlayersDeque(Set<Player> players) {
 		playersDeque = new ArrayList<>(players);
+		for (int i = 0; i < playersDeque.size(); i++) {
+			playersDeque.get(i).setPosition(i);
+		}
+	}
+	
+	public void reversePlayersDeque() {
+		System.out.println(playersDeque);
+		Collections.reverse(playersDeque);
+		System.out.println(playersDeque);
 		for (int i = 0; i < playersDeque.size(); i++) {
 			playersDeque.get(i).setPosition(i);
 		}

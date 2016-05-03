@@ -31,6 +31,7 @@ public class CardsWorker {
 		}
 			break;
 		case 11: {
+			game.rulesController.reversePlayersDeque();
 		}
 			break;
 		case 12: {

@@ -35,7 +35,7 @@ public class Game {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			player.addCard(new Card("green", 10));
+			player.addCard(new Card("green", 11));
 		}
 		rulesController.givePlayersDeque(players);
 		stepController.makeFirstStep(this, ADMIN, table.getCardFromDeck());
