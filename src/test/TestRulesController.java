@@ -56,7 +56,7 @@ public class TestRulesController {
 		bonuses.addCardInToPool(new Card("red", 2));
 		bonuses.addCardInToPool(new Card("red", 2));
 
-		assertEquals(1, rulesController.getNextMover().getCards().size()); // mover
+		assertEquals(1, rulesController.getNextPlayer().getCards().size()); // mover
 																			// 0
 		makeMove(); // next is mover 0
 

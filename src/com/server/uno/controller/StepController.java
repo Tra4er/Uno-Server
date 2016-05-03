@@ -21,7 +21,7 @@ public class StepController {
 	public synchronized boolean makeStep(Player player, Card card) {
 		Card topCard = game.getTable().getTopOpenCard();
 		if (player.equals(rulesController.getMover())) {
-			if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber()) {
+			if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber() || card.getNumber() > 12) {
 				cardsWorker.putCard(card, bonuses);
 				player.removeCard(card);
 				return true;
@@ -40,6 +40,23 @@ public class StepController {
 	}
 
 	public void makeFirstStep(Game game, Player player, Card card) { // TODO
+		if(card.getColor().equals("black")) {
+			int color = (int) (Math.random() * 4);
+			switch (color) {
+			case 0:
+				card.setColor("red");
+				break;
+			case 1:
+				card.setColor("yellow");
+				break;
+			case 2:
+				card.setColor("green");
+				break;
+			case 3:
+				card.setColor("blue");
+				break;
+			}
+		}
 		game.setTopOpenCard(card);
 		rulesController.setMover(game.rulesController.getPlayersDeque().get(0));
 	}

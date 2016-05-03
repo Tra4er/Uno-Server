@@ -35,7 +35,7 @@ public class Game {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			player.addCard(new Card("green", 11));
+			player.addCard(new Card("green", 12));
 		}
 		rulesController.givePlayersDeque(players);
 		stepController.makeFirstStep(this, ADMIN, table.getCardFromDeck());
@@ -46,7 +46,11 @@ public class Game {
 	public void makeMove(Player player, Card card) {
 		try {
 			if (stepController.makeStep(player, card)) {
-				rulesController.giveNextMoverBonuses(stepController.getBonuses());
+				if ((table.getTopOpenCard().getNumber() == 12 || table.getTopOpenCard().getNumber() == 14)
+						&& card.getNumber() != table.getTopOpenCard().getNumber())
+					rulesController.giveThisMoverBonuses(stepController.getBonuses());
+				else
+					rulesController.giveNextMoverBonuses(stepController.getBonuses());
 				if (!player.equals(rulesController.getPrevMover()))
 					rulesController.goToNextMover();
 			}
@@ -74,10 +78,10 @@ public class Game {
 	}
 
 	public void giveCard(Player player) {
-		if(player.equals(rulesController.getMover())) 
+		if (player.equals(rulesController.getMover()))
 			player.addCard(table.getCardFromDeck());
 	}
-	
+
 	public List<String> getPlayersNames() {
 		ArrayList<String> names = new ArrayList<>();
 		for (Player p : players) {

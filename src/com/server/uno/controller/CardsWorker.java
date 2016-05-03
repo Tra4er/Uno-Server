@@ -1,8 +1,12 @@
 package com.server.uno.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.server.uno.model.Bonuses;
 import com.server.uno.model.Card;
 import com.server.uno.model.Game;
+import com.server.uno.model.Player;
 
 public class CardsWorker {
 	
@@ -15,7 +19,14 @@ public class CardsWorker {
 	public void putCard(Card card, Bonuses bonuses) {
 		switch (card.getNumber()) {
 		case 0: {
-			// TODO
+//			List<Card> tempCards = game.rulesController.getPlayersDeque().get(0).getCards();
+//			for (Player player : game.rulesController.getPlayersDeque()) {
+//				List<Card> tempCards1 = new ArrayList<>();
+//				
+//				tempCards1 = player.getCards();
+//				player.setCards(tempCards);
+//				tempCards = tempCards1;
+//			}
 		}
 			break;
 		case 5: {

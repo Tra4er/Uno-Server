@@ -26,7 +26,7 @@ public class RulesController {
 	public void giveNextMoverBonuses(Bonuses bonuses) {
 		this.bonuses = bonuses;
 		Card topCard = game.getTable().getTopOpenCard();
-		Player nextMover = getNextMover();
+		Player nextMover = getNextPlayer();
 
 		if (bonuses.isCards) {
 			boolean giveCards = true;
@@ -42,6 +42,12 @@ public class RulesController {
 		}
 	}
 
+	public void giveThisMoverBonuses(Bonuses bonuses) {
+		for (Card card : bonuses.takeCards()) {
+			mover.addCard(card);
+		}
+	}
+	
 	public void goToNextMover() {
 		prevMover = mover;
 		int padding  = 1 + bonuses.takeGaps();
@@ -55,7 +61,7 @@ public class RulesController {
 			mover = playersDeque.get(mover.getPosition() + padding);
 	}
 
-	public Player getNextMover() {
+	public Player getNextPlayer() {
 		if (mover.getPosition() == playersDeque.size() - 1)
 			return playersDeque.get(0);
 		else

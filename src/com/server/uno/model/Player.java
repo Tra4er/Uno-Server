@@ -65,7 +65,6 @@ public class Player implements Comparable<Player>, Cloneable {
 		this.cards = cards;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Player [id=" + id + ", name=" + name + ", position=" + position + "]";
