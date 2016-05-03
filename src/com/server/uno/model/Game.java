@@ -15,7 +15,7 @@ public class Game {
 	public final int PLAYERS_NEEDED_TO_START = 3;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
-	
+
 	public static final Player ADMIN = new Player(Player.STANDART_ID, Player.STANDART_NAME);
 
 	public volatile boolean started;
@@ -25,17 +25,17 @@ public class Game {
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
 	private GameTable table = new GameTable();
-	
+
 	public RulesController rulesController = new RulesController(this);
 	public StepController stepController = new StepController(this, rulesController);
-	
+
 	public void start() throws Exception {
 		changeStatus("inGame");
 		for (Player player : players) {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			player.addCard(new Card("green", 12));
+			player.addCard(new Card("green", 10));
 		}
 		rulesController.givePlayersDeque(players);
 		stepController.makeFirstStep(this, ADMIN, table.getCardFromDeck());
@@ -43,21 +43,22 @@ public class Game {
 		started = true;
 	}
 
-	public void makeMove(Player player, Card card) { 
+	public void makeMove(Player player, Card card) {
 		try {
-			stepController.makeStep(player, card);
-			rulesController.giveNextMoverBonuses(stepController.getBonuses());
-			rulesController.goToNextMover();
+			if (stepController.makeStep(player, card)) {
+				rulesController.giveNextMoverBonuses(stepController.getBonuses());
+				rulesController.goToNextMover();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);
 		}
 	}
-	
+
 	public Player getMover() {
 		return rulesController.getMover();
 	}
-	
+
 	public String getStatus() {
 		return new String(status);
 	}
@@ -107,11 +108,11 @@ public class Game {
 	public GameTable getTable() {
 		return table;
 	}
-	
+
 	public void setTopOpenCard(Card topCard) { // TODO Valve
 		if (topCard == null)
 			throw new NullPointerException("Wrong top card");
 		table.setTopOpenCard(topCard);
 	}
-	
+
 }

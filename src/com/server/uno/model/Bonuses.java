@@ -11,7 +11,6 @@ public class Bonuses {
 	private int gaps;
 	
 	public boolean isCards;
-	public boolean isGaps;
 	
 	public void addCardInToPool(Card card) {
 		isCards = true;
@@ -24,11 +23,16 @@ public class Bonuses {
 		return cards;
 	}
 	
-	public int getGaps() {
-		return gaps;
+	public int takeGaps() {
+		int temp = gaps;
+		gaps = 0;
+		return temp;
 	}
 	public void addGap() {
 		gaps++;
+	}
+	public void removeGap() {
+		gaps--;
 	}
 	
 	public int getCardsSize() {

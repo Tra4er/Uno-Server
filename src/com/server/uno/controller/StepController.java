@@ -18,15 +18,24 @@ public class StepController {
 		cardsWorker = new CardsWorker(game);
 	}
 	
-	public synchronized void makeStep(Player player, Card card) {
+	public synchronized boolean makeStep(Player player, Card card) {
 		if(player.equals(rulesController.getMover())) {
 			cardsWorker.putCard(card, bonuses);
 			player.removeCard(card);
+			return true;
 		}
+		if(player.equals(rulesController.getPrevMover())) {
+			if(card.getNumber() == game.getTable().getTopOpenCard().getNumber() && card.getNumber() == 10)
+				bonuses.removeGap();
+			cardsWorker.putCard(card, bonuses);
+			player.removeCard(card);
+			return true;
+		}
+		return false;
 	}
 	
 	public void makeFirstStep(Game game, Player player, Card card) { // TODO
-		rulesController.setPrevMover(rulesController.getPlayersDeque().get(rulesController.getPlayersDeque().size() - 1));
+//		rulesController.setPrevMover(rulesController.getPlayersDeque().get(rulesController.getPlayersDeque().size() - 1));
 		game.setTopOpenCard(card);
 		rulesController.setMover(game.rulesController.getPlayersDeque().get(0));
 	}

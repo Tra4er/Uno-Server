@@ -26,7 +26,7 @@ public class RulesController {
 	public void giveNextMoverBonuses(Bonuses bonuses) {
 		this.bonuses = bonuses;
 		Card topCard = game.getTable().getTopOpenCard();
-		Player nextMover = getNextMover(1);
+		Player nextMover = getNextMover();
 
 		if (bonuses.isCards) {
 			boolean giveCards = true;
@@ -40,28 +40,28 @@ public class RulesController {
 				}
 			}
 		}
-		if (bonuses.isGaps) {
-			mover = getNextMover(bonuses.getGaps());
-		}
 	}
 
 	public void goToNextMover() {
-		if (!bonuses.isGaps) {
-			if (mover.getPosition() == playersDeque.size() - 1)
-				mover = playersDeque.get(0);
-			else
-				mover = playersDeque.get(mover.getPosition() + 1);
-		}
-		bonuses.isGaps = false;
+		prevMover = mover;
+		int padding  = 1 + bonuses.takeGaps();
+		if (mover.getPosition() == playersDeque.size() - padding)
+			mover = playersDeque.get(0);
+		else if (mover.getPosition() > playersDeque.size() - padding){
+			int tempGap = playersDeque.size() - mover.getPosition();
+			padding = padding - tempGap;
+			mover = playersDeque.get(padding);
+		} else
+			mover = playersDeque.get(mover.getPosition() + padding);
 	}
 
-	public Player getNextMover(int gap) { 
+	public Player getNextMover() {
 		if (mover.getPosition() == playersDeque.size() - 1)
 			return playersDeque.get(0);
 		else
 			return playersDeque.get(mover.getPosition() + 1);
 	}
-
+	
 	public void givePlayersDeque(Set<Player> players) {
 		playersDeque = new ArrayList<>(players);
 		for (int i = 0; i < playersDeque.size(); i++) {
