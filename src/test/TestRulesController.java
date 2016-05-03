@@ -43,18 +43,17 @@ public class TestRulesController {
 		
 		rulesController.setMover(rulesController.getPlayersDeque().get(1));
 		
-		bonuses.addCardInToPool(new Card("red", 2));
-		bonuses.addCardInToPool(new Card("red", 2));
-		bonuses.addGap();
+		rulesController.goToNextMover();
+		// Mover is two
 	}
 	
 	@Test
 	public void testGiveBonuses() {
-		rulesController.endMoverMove();
-		rulesController.goToNextMover();
+		bonuses.addCardInToPool(new Card("red", 2));
+		bonuses.addCardInToPool(new Card("red", 2));
 //		FORGET ABOUT THIS PART
 		
-		assertEquals(1, rulesController.getNextMover().getCards().size()); // mover 0
+		assertEquals(1, rulesController.getNextMover(1).getCards().size()); // mover 0
 		
 		makeMove(); // next is mover 0
 		
@@ -75,31 +74,36 @@ public class TestRulesController {
 		assertEquals(4, bonuses.getCardsSize());
 		
 		makeMove(); // next is mover 2
-		System.out.println(bonuses.getCardsSize());
 
 		assertEquals(5, rulesController.getMover().getCards().size()); // mover 1
 		assertEquals(0, bonuses.getCardsSize());
 	}
 	
 	@Test
-	public void testGoToNextMover() {
-		assertEquals(one, rulesController.getMover());
-		rulesController.endMoverMove();
-		rulesController.goToNextMover();
+	public void testGap() {
+		bonuses.addGap();
+		
 		assertEquals(two, rulesController.getMover());
-		rulesController.endMoverMove();
+		
+		makeMove();
+		
+		assertEquals(one, rulesController.getMover());
+	}
+	
+	@Test
+	public void testGoToNextMover() {
+		assertEquals(two, rulesController.getMover());
 		rulesController.goToNextMover();
 		assertEquals(zero, rulesController.getMover());
 	}
 	
-	@After
-	public void cleaning() {
-		rulesController = null;
-		bonuses = null;
+	@Test
+	public void testGetNextMover() {
+		Player nextMover = rulesController.getNextMover(2);
+		assertEquals(zero, nextMover);
 	}
 	
 	private void makeMove() {
-		rulesController.endMoverMove();
 		rulesController.giveNextMoverBonuses(bonuses); 
 		rulesController.goToNextMover();
 	}

@@ -17,57 +17,55 @@ public class RulesController {
 	private Game game; // TODO remove if it uses only in one place
 	private ArrayList<Player> playersDeque;
 
+	private Bonuses bonuses = new Bonuses();
+
 	public RulesController(Game game) {
 		this.game = game;
 	}
 
 	public void giveNextMoverBonuses(Bonuses bonuses) {
+		this.bonuses = bonuses;
 		Card topCard = game.getTable().getTopOpenCard();
-		Player nextMover = getNextMover();
-		System.out.println(bonuses.getCardsSize());
-		
+		Player nextMover = getNextMover(1);
+
 		if (bonuses.isCards) {
 			boolean giveCards = true;
 			for (Card card : nextMover.getCards()) {
-				 if (card.getNumber() == topCard.getNumber() 
-						 && (topCard.getNumber() == 12 || topCard.getNumber() == 14))
-					 giveCards = false;
+				if (card.getNumber() == topCard.getNumber() && (topCard.getNumber() == 12 || topCard.getNumber() == 14))
+					giveCards = false;
 			}
-			if(giveCards) {
+			if (giveCards) {
 				for (Card card : bonuses.takeCards()) {
 					nextMover.addCard(card);
 				}
 			}
 		}
 		if (bonuses.isGaps) {
-			
+			mover = getNextMover(bonuses.getGaps());
 		}
 	}
 
 	public void goToNextMover() {
-		if (prevMover.getPosition() == playersDeque.size() - 1)
-			mover = playersDeque.get(0);
-		else
-			mover = playersDeque.get(prevMover.getPosition() + 1);
+		if (!bonuses.isGaps) {
+			if (mover.getPosition() == playersDeque.size() - 1)
+				mover = playersDeque.get(0);
+			else
+				mover = playersDeque.get(mover.getPosition() + 1);
+		}
+		bonuses.isGaps = false;
 	}
 
-	public Player getNextMover() {
-		if (prevMover.getPosition() == playersDeque.size() - 1)
+	public Player getNextMover(int gap) { 
+		if (mover.getPosition() == playersDeque.size() - 1)
 			return playersDeque.get(0);
 		else
-			return playersDeque.get(prevMover.getPosition() + 1);
-	}
-
-	public void endMoverMove() {
-		prevMover = mover;
-		mover = Game.ADMIN;
+			return playersDeque.get(mover.getPosition() + 1);
 	}
 
 	public void givePlayersDeque(Set<Player> players) {
 		playersDeque = new ArrayList<>(players);
 		for (int i = 0; i < playersDeque.size(); i++) {
 			playersDeque.get(i).setPosition(i);
-			System.out.println(playersDeque.get(i));
 		}
 	}
 

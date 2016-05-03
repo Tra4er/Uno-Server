@@ -22,7 +22,6 @@ public class StepController {
 		if(player.equals(rulesController.getMover())) {
 			cardsWorker.putCard(card, bonuses);
 			player.removeCard(card);
-			rulesController.endMoverMove();
 		}
 	}
 	
