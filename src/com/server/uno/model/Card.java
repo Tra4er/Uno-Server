@@ -44,6 +44,12 @@ public class Card implements Cloneable {
 		else
 			return false;
 	}
+	
+	@Override
+	public int hashCode() { // TODO
+		return number;
+		
+	}
 
 	@Override
 	public Card clone() throws CloneNotSupportedException {

@@ -19,14 +19,14 @@ public class CardsWorker {
 	public void putCard(Card card, Bonuses bonuses) {
 		switch (card.getNumber()) {
 		case 0: {
-//			List<Card> tempCards = game.rulesController.getPlayersDeque().get(0).getCards();
-//			for (Player player : game.rulesController.getPlayersDeque()) {
-//				List<Card> tempCards1 = new ArrayList<>();
-//				
-//				tempCards1 = player.getCards();
-//				player.setCards(tempCards);
-//				tempCards = tempCards1;
-//			}
+			List<Card> tempCards = game.rulesController.getPlayersDeque().get(game.rulesController.getPlayersDeque().size() - 1).getCards();
+			for (Player player : game.rulesController.getPlayersDeque()) {
+				List<Card> tempCards1 = new ArrayList<>();
+				
+				tempCards1 = player.getCards();
+				player.setCards(tempCards);
+				tempCards = tempCards1;
+			}
 		}
 			break;
 		case 5: {

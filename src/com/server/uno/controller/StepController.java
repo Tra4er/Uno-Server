@@ -22,8 +22,8 @@ public class StepController {
 		Card topCard = game.getTable().getTopOpenCard();
 		if (player.equals(rulesController.getMover())) {
 			if (card.getColor().equals(topCard.getColor()) || card.getNumber() == topCard.getNumber() || card.getNumber() > 12) {
-				cardsWorker.putCard(card, bonuses);
 				player.removeCard(card);
+				cardsWorker.putCard(card, bonuses);
 				return true;
 			}
 		}
@@ -31,8 +31,8 @@ public class StepController {
 			if (card.getNumber() == game.getTable().getTopOpenCard().getNumber()) {
 				if (card.getNumber() == 10)
 					bonuses.removeGap();
-				cardsWorker.putCard(card, bonuses);
 				player.removeCard(card);
+				cardsWorker.putCard(card, bonuses);
 				return true;
 			}
 		}
@@ -59,7 +59,8 @@ public class StepController {
 		}
 		rulesController.setMover(player);
 		cardsWorker.putCard(card, bonuses);
-		game.setTopOpenCard(card);
+//		game.setTopOpenCard(card);
+		game.setTopOpenCard(new Card("green", 6));
 	}
 
 	public Bonuses getBonuses() {

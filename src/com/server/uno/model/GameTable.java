@@ -67,7 +67,7 @@ public class GameTable implements Cloneable {
 
 	public void setTopOpenCard(Card topCard) {
 		if (topCard == null)
-			throw new NullPointerException("Wrong top card");
+			throw new IllegalArgumentException("Wrong top card");
 
 		discardPile.add(topOpenCard);
 		topOpenCard = topCard;
