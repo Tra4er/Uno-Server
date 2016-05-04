@@ -29,11 +29,11 @@ public class Server {
 		}
 	}
 
-	public static void update() throws Exception {
+	public static synchronized void update() throws Exception {
 		if (game.getPlayersToGo() <= 0) {
 			if (game.started) {
 				// TODO
-			} else {
+			} else if (!game.started){
 				game.start();
 			}
 		} else {

@@ -13,7 +13,7 @@ import com.server.uno.util.StepTimer;
 public class Game {
 
 	public final int PLAYERS_NEEDED_TO_START = 2;
-	public final int START_CARDS_NUMBER = 7;
+	public final int START_CARDS_NUMBER = 1;
 	public final int STEP_TIME = 45;
 
 	public static final Player ADMIN = new Player(Player.STANDART_ID, Player.STANDART_NAME);
@@ -24,12 +24,17 @@ public class Game {
 	private volatile Set<Player> players = new HashSet<>();
 	private volatile int playersToGo = PLAYERS_NEEDED_TO_START;
 	private volatile StepTimer timer = new StepTimer(STEP_TIME);
-	private GameTable table = new GameTable();
+	private GameTable table;
 
-	public RulesController rulesController = new RulesController(this);
-	public StepController stepController = new StepController(this, rulesController);
+	public RulesController rulesController;
+	public StepController stepController;
 
-	public void start() throws Exception {
+	public synchronized void start() throws Exception {
+		started = true;
+		table = new GameTable();
+		rulesController = new RulesController(this);
+		stepController = new StepController(this, rulesController);
+		
 		changeStatus("inGame");
 		for (Player player : players) {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
@@ -37,12 +42,22 @@ public class Game {
 			}
 		}
 		rulesController.givePlayersDeque(players);
-		stepController.makeFirstStep(this, rulesController.getPlayersDeque().get(rulesController.getPlayersDeque().size() - 1), new Card("black", 14));
+		stepController.makeFirstStep(this, rulesController.getPlayersDeque().get(rulesController.getPlayersDeque().size() - 1), table.getCardFromDeck());
 		rulesController.giveNextMoverBonuses(stepController.getBonuses());
 		rulesController.setMover(rulesController.getPlayersDeque().get(0));
 		timer.start();
-		started = true;
 		Server.update();
+	}
+	
+	public synchronized void end() throws Exception {
+		if(rulesController.countPoints() < 500) {
+			for (Player player : players) {
+				player.removeAllCards();
+			}
+			start();
+		}
+		else
+			changeStatus("endGame");
 	}
 
 	public void makeMove(Player player, Card card) {
@@ -61,6 +76,10 @@ public class Game {
 					rulesController.goToNextMover();
 				}
 			}
+			
+			if (player.getCards().size() == 0) 
+				end();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);
@@ -76,10 +95,14 @@ public class Game {
 	}
 
 	public void changeStatus(String status) {
-		if (!status.equals("inRoom") && !status.equals("inGame"))
+		if (!status.equals("inRoom") && !status.equals("inGame") && !status.equals("endGame"))
 			throw new IllegalArgumentException("Wrong game status: " + status);
 		if (status.equals("inGame"))
 			started = true;
+		if (status.equals("inRoom"))
+			started = false;
+		if (status.equals("endGame"))
+			started = false;
 		this.status = status;
 		Server.log.info("Game status changed: " + status);
 	}

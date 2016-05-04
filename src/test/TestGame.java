@@ -40,4 +40,9 @@ public class TestGame {
 		}
 		assertNotEquals(null, game.getMover());
 	}
+	
+	@Test
+	public void testEndGame() {
+		
+	}
 }

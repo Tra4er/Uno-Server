@@ -12,6 +12,7 @@ public class Player implements Comparable<Player>, Cloneable {
 	private volatile String name;
 	private volatile List<Card> cards = new LinkedList<>();
 	private volatile int position;
+	private volatile int score;
 	
 	public volatile boolean isFirstMove = true;
 	
@@ -43,6 +44,10 @@ public class Player implements Comparable<Player>, Cloneable {
 			throw new IllegalArgumentException("Wrong card");
 		cards.remove(card);
 		card.setColor(temp);
+	}
+	
+	public void removeAllCards() {
+		cards.clear();
 	}
 
 	public String getName() {
@@ -91,6 +96,20 @@ public class Player implements Comparable<Player>, Cloneable {
 		if(position < 0)
 			throw new IllegalArgumentException("Wrong position");
 		this.position = position;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		if (score < 0)
+			throw new IllegalArgumentException("Wrong score");
+		this.score = score;
+	}
+	
+	public void addPoints(int points) {
+		score += points;
 	}
 
 }

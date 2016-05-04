@@ -81,6 +81,30 @@ public class RulesController {
 			playersDeque.get(i).setPosition(i);
 		}
 	}
+	
+	public int countPoints() {
+		int topScore = 0;
+		for (Player player : playersDeque) {
+			for (Card card : player.getCards()) {
+				if(card.getNumber() < 10) 
+					player.addPoints(card.getNumber());;
+				switch (card.getNumber()) {
+				case 10 :
+				case 11 :
+				case 12 : 
+					player.addPoints(20);
+					break;
+				case 13 :
+				case 14 :
+					player.addPoints(50);
+					break;
+				}
+			}
+			if(player.getScore() > topScore)
+				topScore = player.getScore();
+		}
+		return topScore;
+	}
 
 	public Player getPrevMover() {
 		return prevMover;
