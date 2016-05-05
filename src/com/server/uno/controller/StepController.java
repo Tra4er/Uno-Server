@@ -59,8 +59,7 @@ public class StepController {
 		}
 		rulesController.setMover(player);
 		cardsWorker.putCard(card, bonuses);
-//		game.setTopOpenCard(card);
-		game.setTopOpenCard(new Card("green", 6));
+		game.setTopOpenCard(card);
 	}
 
 	public Bonuses getBonuses() {

@@ -12,8 +12,8 @@ import com.server.uno.util.StepTimer;
 
 public class Game {
 
-	public final int PLAYERS_NEEDED_TO_START = 3;
-	public final int START_CARDS_NUMBER = 1;
+	public final int PLAYERS_NEEDED_TO_START = 2;
+	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
 
 	public static final Player ADMIN = new Player(Player.STANDART_ID, Player.STANDART_NAME);
@@ -34,30 +34,30 @@ public class Game {
 		table = new GameTable();
 		rulesController = new RulesController(this);
 		stepController = new StepController(this, rulesController);
-		
+
 		changeStatus("inGame");
 		for (Player player : players) {
 			for (int i = 0; i < START_CARDS_NUMBER; i++) {
 				player.addCard(table.getCardFromDeck());
 			}
-			player.addCard(new Card("green", 0));
 		}
 		rulesController.givePlayersDeque(players);
-		stepController.makeFirstStep(this, rulesController.getPlayersDeque().get(rulesController.getPlayersDeque().size() - 1), table.getCardFromDeck());
+		stepController.makeFirstStep(this,
+				rulesController.getPlayersDeque().get(rulesController.getPlayersDeque().size() - 1),
+				table.getCardFromDeck());
 		rulesController.giveNextMoverBonuses(stepController.getBonuses());
 		rulesController.setMover(rulesController.getPlayersDeque().get(0));
 		timer.start();
 		Server.update();
 	}
-	
+
 	public synchronized void end() throws Exception {
-		if(rulesController.countPoints() < 500) {
+		if (rulesController.countPoints() < 500) {
 			for (Player player : players) {
 				player.removeAllCards();
 			}
 			start();
-		}
-		else
+		} else
 			changeStatus("endGame");
 	}
 
@@ -65,22 +65,27 @@ public class Game {
 		try {
 			Card prevCard = table.getTopOpenCard();
 			if (stepController.makeStep(player, card)) {
-				if ((prevCard.getNumber() == 12 || prevCard.getNumber() == 14) 
+				if (player.equals(rulesController.getPrevMover())
+						&& ((prevCard.getNumber() == 12 || prevCard.getNumber() == 14))) {
+					// Don't give bonuses
+				} 
+				else if ((prevCard.getNumber() == 12 || prevCard.getNumber() == 14)
 						&& card.getNumber() != prevCard.getNumber())
 					rulesController.giveThisMoverBonuses(stepController.getBonuses());
-				else
+				else 
 					rulesController.giveNextMoverBonuses(stepController.getBonuses());
-				
-				if(prevCard.getNumber() == 10)
+
+				if (prevCard.getNumber() == 10)
 					rulesController.goToNextMover();
-				else if (!player.equals(rulesController.getPrevMover()) || (table.getTopOpenCard().getNumber() == 10 && card.getNumber() == 10)) {
+				else if (!player.equals(rulesController.getPrevMover())
+						|| (table.getTopOpenCard().getNumber() == 10 && card.getNumber() == 10)) {
 					rulesController.goToNextMover();
 				}
 			}
-			
-			if (player.getCards().size() == 0) 
+
+			if (player.getCards().size() == 0)
 				end();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Server.log.error(e);
