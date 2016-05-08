@@ -88,6 +88,20 @@ public class JsonWorker {
 				data.put("state", "inRoom");
 				response.put("response", data);
 				Server.log.info(response);
+			} else if (game.getStatus().equals("endGame")) {
+				JSONObject data = new JSONObject();
+				data.put("state", "endGame");
+				
+				JSONArray players = new JSONArray();
+				for (Player temp : game.getPlayers()) {
+					JSONObject playersJson = new JSONObject();
+					playersJson.put("name", temp.getName());
+					playersJson.put("score", temp.getScore());
+					players.put(playersJson);
+				}
+				data.put("players", players);
+				
+				response.put("response", data);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

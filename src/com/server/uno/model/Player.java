@@ -88,6 +88,8 @@ public class Player implements Comparable<Player>, Cloneable {
 		return (Player) super.clone();
 	}
 
+//	TODO equals() with id
+	
 	public int getPosition() {
 		return position;
 	}
