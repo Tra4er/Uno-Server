@@ -92,6 +92,8 @@ public class JsonWorker {
 				JSONObject data = new JSONObject();
 				data.put("state", "endGame");
 				
+				data.put("currentPlayerName", player.getName());
+				
 				JSONArray players = new JSONArray();
 				for (Player temp : game.getPlayers()) {
 					JSONObject playersJson = new JSONObject();
@@ -102,6 +104,7 @@ public class JsonWorker {
 				data.put("players", players);
 				
 				response.put("response", data);
+				Server.log.info(response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -15,6 +15,7 @@ public class Game {
 	public final int PLAYERS_NEEDED_TO_START = 2;
 	public final int START_CARDS_NUMBER = 7;
 	public final int STEP_TIME = 45;
+	public final int GAME_OVER_POINTS = 10;
 
 	public static final Player ADMIN = new Player(Player.STANDART_ID, Player.STANDART_NAME);
 
@@ -52,7 +53,7 @@ public class Game {
 	}
 
 	public synchronized void end() throws Exception {
-		if (rulesController.countPoints() < 500) {
+		if (rulesController.countPoints() < GAME_OVER_POINTS) {
 			for (Player player : players) {
 				player.removeAllCards();
 			}

@@ -33,7 +33,7 @@ public class Server {
 		if (game.getPlayersToGo() <= 0) {
 			if (game.started) {
 				// TODO
-			} else if (!game.started){
+			} else if (!game.started && !game.getStatus().equals("endGame")){
 				game.start();
 			}
 		} else {
